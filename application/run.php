@@ -9,8 +9,7 @@
  * file that was distributed with this source code.
  */
 
-define('ROOT_PATH', dirname(__DIR__) . '/'); 
+include_once 'bootstrap.php';
 
-function __autoload($class) {
-	require_once ROOT_PATH . 'library/' . str_replace('\\', '/', $class) . '.php';
-}
+$script = new Example\ExampleScript();
+$script->run();

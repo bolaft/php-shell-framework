@@ -9,8 +9,14 @@
  * file that was distributed with this source code.
  */
 
-define('ROOT_PATH', dirname(__DIR__) . '/'); 
+namespace Scriptonic\GUI;
 
-function __autoload($class) {
-	require_once ROOT_PATH . 'library/' . str_replace('\\', '/', $class) . '.php';
+/**
+ * The script's graphical user interface
+ *
+ * @author Soufian Salim <soufi@nsal.im>
+ */
+class GUI
+{
+	
 }

@@ -12,11 +12,45 @@
 namespace Scriptonic;
 
 /**
- * The Scriptonic class provides functionalities to script classes who extend it
+ * The Scriptonic class provides simple Shell functionalities to classes who extend it
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Scriptonic
+abstract class Scriptonic 
 {
-	
+	use Debug\Log\Loggable;
+
+	/**
+	 * @var Scriptonic
+	 * @static
+	 */
+	public static $instance = null;
+
+	public function __construct()
+	{
+		$this->log('info', array('Constructing new Scriptonic', $this));
+
+		self::$instance = $this;
+
+		set_error_handler(array(new Debug\Error\ErrorHandler(), 'handleError'));
+		set_exception_handler(array(new Debug\Exception\ExceptionHandler(), 'handleException'));
+	}
+
+	public function __destruct() 
+	{
+		restore_exception_handler();
+		restore_error_handler();
+	}
+
+	public function run()
+	{
+		$this->log('info', array('Running Scriptonic', $this));
+	}
+
+	public function stop()
+	{
+		$this->log('info', array('Stopping Scriptonic', $this));
+
+		$this->__destruct();
+	}
 }
