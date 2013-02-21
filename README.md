@@ -1,4 +1,1 @@
-php-shell-framework
-===================
-
-PHP Shell Framework
+SCRIPTONIC PHP Shell Framework
