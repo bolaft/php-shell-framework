@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Scriptonic package.
+ * This file is part of the CursedScript package.
  *
  * (c) Soufian Salim <soufi@nsal.im>
  *
@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Scriptonic\Tools;
+namespace CursedScript\Tool\String;
 
 /**
  * Performs string operations
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class String
+class Format
 {
     /**
      * Translates a camel case string into a string with underscores

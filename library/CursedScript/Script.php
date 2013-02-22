@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Scriptonic package.
+ * This file is part of the CursedScript package.
  *
  * (c) Soufian Salim <soufi@nsal.im>
  *
@@ -9,19 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Scriptonic;
+namespace CursedScript;
 
 /**
- * The Scriptonic class provides simple Shell functionalities to classes who extend it
+ * The Script class provides simple Shell functionalities to classes who extend it
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Scriptonic 
+abstract class Script 
 {
-	use Debug\Log\Loggable;
-
 	/**
-	 * @var Scriptonic
+	 * @var CursedScript
 	 * @static
 	 */
 	public static $instance = null;
@@ -44,12 +42,12 @@ abstract class Scriptonic
 
 	public function run()
 	{
-		$this->log('info', array('Running Scriptonic'));
+		Debug\Log\Logger::log('info', array('Running CursedScript'));
 	}
 
 	public function stop()
 	{
-		$this->log('info', array('Stopping Scriptonic'));
+		Debug\Log\Logger::log('info', array('Stopping CursedScript'));
 
 		$this->__destruct();
 	}

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Scriptonic package.
+ * This file is part of the CursedScript package.
  *
  * (c) Soufian Salim <soufi@nsal.im>
  *
@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Scriptonic\Debug\Error;
+namespace CursedScript\Debug\Error;
 
-use \Scriptonic\Debug\Log;
+use \CursedScript\Debug\Log;
 
 /**
  * Handles PHP errors
@@ -20,21 +20,19 @@ use \Scriptonic\Debug\Log;
  */
 class ErrorHandler
 {
-	use Log\Loggable;
-
 	public function handleError($level, $message, $file = null, $line = null, $context = null)
 	{
-		$this->log('ERROR', func_get_args(), 'errors');
+		Log\Logger::log('ERROR', func_get_args(), 'errors');
 
-		$error = (new Error())
-			->setLevel($level)
-			->setMessage($message)
-			->setFile($file)
-			->setLine($line)
-			->setContext($context);
+		$error = new Error();
+		$error->setLevel($level)
+			  ->setMessage($message)
+			  ->setFile($file)
+			  ->setLine($line)
+			  ->setContext($context);
 
 		$error->display();
 
-		\Scriptonic\Scriptonic::$instance->stop();
+		\CursedScript\Script::$instance->stop();
 	}
 }

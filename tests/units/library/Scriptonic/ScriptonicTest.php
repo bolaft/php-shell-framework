@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Scriptonic package.
+ * This file is part of the CursedScript package.
  *
  * (c) Soufian Salim <soufi@nsal.im>
  *
@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Scriptonic\GUI;
+namespace CursedScript;
 
 /**
- * The script's graphical user interface
+ * The CursedScript class provides functionalities to script classes who extend it
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class GUI
+class CursedScriptTest extends \PHPUnit_Framework_TestCase
 {
 	
 }

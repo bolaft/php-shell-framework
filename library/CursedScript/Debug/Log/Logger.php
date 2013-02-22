@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Scriptonic package.
+ * This file is part of the CursedScript package.
  *
  * (c) Soufian Salim <soufi@nsal.im>
  *
@@ -9,16 +9,31 @@
  * file that was distributed with this source code.
  */
 
-namespace Scriptonic\Debug\Log;
+namespace CursedScript\Debug\Log;
+
+use \CursedScript\Tools\String;
 
 /**
- * Adds loggable behaviour
+ * Define logging parameters
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-trait Loggable
+class Logger
 {
-	private function log($level, $data, $channel = null)
+	/**
+	 * @var string
+	 * @static
+	 */
+	public static $dir;
+
+	public static function setDir($dir)
+	{
+		if (substr($dir, -1) !== '/') $dir .= '/';
+
+		Logger::$dir = $dir;
+	}
+
+	public static function log($level, $data, $channel = null)
 	{
 		if (isset(Logger::$dir)){
 			$write = function($channel) use ($level, $data){

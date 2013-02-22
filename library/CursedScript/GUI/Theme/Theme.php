@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Scriptonic package.
+ * This file is part of the CursedScript package.
  *
  * (c) Soufian Salim <soufi@nsal.im>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Scriptonic\GUI\Theme;
+namespace CursedScript\GUI\Theme;
 
 /**
  * Customizes the GUI displayed in the shell

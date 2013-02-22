@@ -1,1 +1,1 @@
-SCRIPTONIC PHP Shell Framework
+CursedScript PHP Shell Framework

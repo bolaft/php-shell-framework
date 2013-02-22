@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Scriptonic package.
+ * This file is part of the CursedScript package.
  *
  * (c) Soufian Salim <soufi@nsal.im>
  *
@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
-include_once 'bootstrap.php';
+include_once './../bootstrap.php';
+include_once './example.php';
 
-$script = new Example\ExampleScript();
+$script = new ExampleScript();
