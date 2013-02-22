@@ -28,12 +28,12 @@ abstract class Scriptonic
 
 	public function __construct()
 	{
-		$this->log('info', array('Constructing new Scriptonic', $this));
-
 		self::$instance = $this;
 
 		set_error_handler(array(new Debug\Error\ErrorHandler(), 'handleError'));
 		set_exception_handler(array(new Debug\Exception\ExceptionHandler(), 'handleException'));
+
+		$this->run();
 	}
 
 	public function __destruct() 
@@ -44,12 +44,12 @@ abstract class Scriptonic
 
 	public function run()
 	{
-		$this->log('info', array('Running Scriptonic', $this));
+		$this->log('info', array('Running Scriptonic'));
 	}
 
 	public function stop()
 	{
-		$this->log('info', array('Stopping Scriptonic', $this));
+		$this->log('info', array('Stopping Scriptonic'));
 
 		$this->__destruct();
 	}

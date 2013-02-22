@@ -18,5 +18,10 @@ namespace Example;
  */
 class ExampleScript extends \Scriptonic\Scriptonic
 {
-	
+	public function run()
+	{
+		\Scriptonic\Debug\Log\Logger::setDir(ROOT_PATH);
+
+		parent::run();
+	}
 }

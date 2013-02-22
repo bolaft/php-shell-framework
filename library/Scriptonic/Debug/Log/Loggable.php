@@ -22,7 +22,7 @@ trait Loggable
 	{
 		if (isset(Logger::$dir)){
 			$write = function($channel) use ($level, $data){
-				$output = json_encode(date('H:i:s'), $level, $data);
+				$output = json_encode(array(date('H:i:s'), $level, $data));
 
 		        $file = Logger::$dir . $channel . '_' . date('d_m_Y') . '.json';
 

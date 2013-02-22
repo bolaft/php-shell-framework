@@ -12,4 +12,3 @@
 include_once 'bootstrap.php';
 
 $script = new Example\ExampleScript();
-$script->run();
