@@ -147,7 +147,7 @@ class Exception
 	 */
 	public function getTrace()
 	{
-	    return $this->line;
+	    return $this->trace;
 	}
 	
 	/**

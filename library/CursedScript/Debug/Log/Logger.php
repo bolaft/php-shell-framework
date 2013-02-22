@@ -16,32 +16,49 @@ namespace CursedScript\Debug\Log;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Logger implements LoggerInterface
+abstract class Logger
 {
 	/**
 	 * @var string
-	 * @static
 	 */
-	public static $dir;
+	private static $dir;
 
-	public static function setDir($dir)
+	/**
+	 * @var callable
+	 */
+	private static $handle = '\CursedScript\Debug\Log\Logger::handle';
+
+	public static function log()
 	{
-		if (substr($dir, -1) !== '/') $dir .= '/';
+		call_user_func_array(Logger::$handle, func_get_args());
 
-		Logger::$dir = $dir;
 	}
 
-	public static function log($level, $data, $channel = null)
+	public static function handle($level, $data, $channel = null)
 	{
-		if (isset(Logger::$dir)){
-			$write = function($channel) use ($level, $data){
-				$output = json_encode(array(date('H:i:s'), $level, $data));
+		$log = new Log();
+		$log->setDate(date('d-m-Y'))
+		    ->setTime(date('H:i:s'))
+		    ->setLevel($level)
+		    ->setData($data);
 
+		if (isset(Logger::$dir)){
+			$write = function($channel) use ($log){
 		        $file = Logger::$dir . $channel . '_' . date('d_m_Y') . '.json';
 
-		        if (!file_exists($file)) fopen($file, 'x+');
+		        if (!file_exists($file)){
+		        	fopen($file, 'x+');
+		        	$contents = array('[' . PHP_EOL);
+		        } else {
+		        	$contents = file($file);
+		        	array_pop($contents);
+		        	$contents[sizeof($contents) - 1] = str_replace(PHP_EOL, ',' . PHP_EOL, $contents[sizeof($contents) - 1]);
+		        }
 
-		        file_put_contents($file, $output . PHP_EOL, FILE_APPEND);
+		        $contents[] = "\t" . $log->serialize() . PHP_EOL;
+		        $contents[] = ']';
+
+		        file_put_contents($file, implode($contents));
 			};
 
 	        $write('all');
@@ -50,5 +67,17 @@ class Logger implements LoggerInterface
 	        	$write($channel);
 	        }
 		}
+	}
+
+	public static function setDir($dir)
+	{
+		if (substr($dir, -1) !== '/') $dir .= '/';
+
+		Logger::$dir = $dir;
+	}
+
+	public static function setHandle($handle)
+	{
+		Logger::$handle = $handle;
 	}
 }
