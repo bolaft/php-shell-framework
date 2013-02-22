@@ -11,14 +11,12 @@
 
 namespace CursedScript\Debug\Log;
 
-use \CursedScript\Tools\String;
-
 /**
- * Define logging parameters
+ * The default logger
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Logger
+class Logger implements LoggerInterface
 {
 	/**
 	 * @var string

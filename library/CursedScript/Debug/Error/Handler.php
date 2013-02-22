@@ -18,7 +18,7 @@ use \CursedScript\Debug\Log;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class ErrorHandler
+class Handler
 {
 	public function handleError($level, $message, $file = null, $line = null, $context = null)
 	{

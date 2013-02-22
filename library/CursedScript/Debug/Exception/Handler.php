@@ -18,7 +18,7 @@ use \CursedScript\Debug\Log;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class ExceptionHandler
+class Handler
 {
 	public function handleException($e)
 	{

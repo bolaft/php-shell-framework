@@ -12,7 +12,7 @@
 namespace CursedScript;
 
 /**
- * The Script class provides simple Shell functionalities to classes who extend it
+ * The Script class provides advanced console functionalities to classes who extend it
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
@@ -28,8 +28,8 @@ abstract class Script
 	{
 		self::$instance = $this;
 
-		set_error_handler(array(new Debug\Error\ErrorHandler(), 'handleError'));
-		set_exception_handler(array(new Debug\Exception\ExceptionHandler(), 'handleException'));
+		set_error_handler(array(new Debug\Error\Handler(), 'handleError'));
+		set_exception_handler(array(new Debug\Exception\Handler(), 'handleException'));
 
 		$this->run();
 	}
