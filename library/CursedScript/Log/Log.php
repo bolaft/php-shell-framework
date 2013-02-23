@@ -9,7 +9,7 @@
  * level that was distributed with this source time.
  */
 
-namespace CursedScript\Debug\Log;
+namespace CursedScript\Log;
 
 /**
  * Represents a log level
@@ -21,6 +21,11 @@ class Log
 	/**
 	 * @var string
 	 */
+	protected $level;
+
+	/**
+	 * @var string
+	 */
 	protected $date;
 
 	/**
@@ -29,15 +34,31 @@ class Log
 	protected $time;
 
 	/**
-	 * @var string
-	 */
-	protected $level;
-
-	/**
 	 * @var array
 	 */
 	protected $data;
 
+	/**
+	 * @var string
+	 */
+	protected $channel;
+
+	public function __construct($level, $data, $channel = 'info')
+	{
+		$this->setDate(date('d-m-Y'))
+			 ->setTime(date('H:i:s'))
+			 ->setChannel($channel)
+			 ->setLevel($level)
+			 ->setData($data);
+		
+		call_user_func(\CursedScript\Script::getInstance()->getLogger()->getHandle(), $this);
+	}
+
+	/**
+	 * Returns a json representation of itself
+	 * 
+	 * @return string
+	 */
 	public function serialize()
 	{
 		$json = array();
@@ -47,6 +68,29 @@ class Log
 	    }
 
 	    return json_encode($json);
+	}
+
+	/**
+	 * Get level
+	 *
+	 * @return string
+	 */
+	public function getLevel()
+	{
+	    return $this->level;
+	}
+	
+	/**
+	 * Set level
+	 *
+	 * @param  string $level
+	 * @return Log
+	 */
+	public function setLevel($level)
+	{
+	    $this->level = $level;
+	
+	    return $this;
 	}
 
 	/**
@@ -96,29 +140,6 @@ class Log
 	}
 
 	/**
-	 * Get level
-	 *
-	 * @return string
-	 */
-	public function getLevel()
-	{
-	    return $this->level;
-	}
-	
-	/**
-	 * Set level
-	 *
-	 * @param  string $level
-	 * @return Log
-	 */
-	public function setLevel($level)
-	{
-	    $this->level = $level;
-	
-	    return $this;
-	}
-
-	/**
 	 * Get data
 	 *
 	 * @return array
@@ -137,6 +158,29 @@ class Log
 	public function setData($data)
 	{
 	    $this->data = $data;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get channel
+	 *
+	 * @return string
+	 */
+	public function getChannel()
+	{
+	    return $this->channel;
+	}
+	
+	/**
+	 * Set channel
+	 *
+	 * @param  string $channel
+	 * @return Log
+	 */
+	public function setChannel($channel)
+	{
+	    $this->channel = $channel;
 	
 	    return $this;
 	}

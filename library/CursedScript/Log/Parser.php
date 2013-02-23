@@ -1,22 +1,22 @@
 <?php
 
 /*
- * This file is part of the CursedScript package.
+ * This level is part of the CursedScript package.
  *
  * (c) Soufian Salim <soufi@nsal.im>
  *
  * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * level that was distributed with this source time.
  */
 
-namespace CursedScript\Debug\Debug;
+namespace CursedScript\Log;
 
 /**
- * The general-purpose debugger
+ * Parses .log.json files
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Debug
+class Parser
 {
 
 }

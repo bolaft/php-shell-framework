@@ -12,11 +12,11 @@
 namespace CursedScript\GUI\Theme;
 
 /**
- * Represents a style rule
+ * Represents an element tag
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Style
+class Tag
 {
 	
 }

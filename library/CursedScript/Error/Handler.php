@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\Debug\Error;
+namespace CursedScript\Error;
 
-use \CursedScript\Debug\Log;
+use \CursedScript\Log\Log;
 
 /**
  * Handles PHP errors
@@ -20,9 +20,19 @@ use \CursedScript\Debug\Log;
  */
 class Handler
 {
+	/**
+	 * The default error handler
+	 * Logs the event, display the error and stops the script
+	 * 
+	 * @param  int $level
+	 * @param  string $message
+	 * @param  string $file
+	 * @param  int $line
+	 * @param  array $context
+	 */
 	public function handleError($level, $message, $file = null, $line = null, $context = null)
 	{
-		Log\Logger::log('ERROR', func_get_args(), 'errors');
+		new Log('ERROR', func_get_args(), 'errors');
 
 		$error = new Error();
 		$error->setLevel($level)

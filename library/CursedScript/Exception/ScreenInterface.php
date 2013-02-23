@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\Debug\Error;
+namespace CursedScript\Exception;
 
 /**
- * Abstract class for error screens
+ * Interface for exception screens
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class ScreenAbstract extends \CursedScript\GUI\Screen
+interface ScreenInterface
 {
 
 }

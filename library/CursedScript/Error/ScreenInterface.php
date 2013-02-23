@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\GUI\Theme;
+namespace CursedScript\Error;
 
 /**
- * Represents a style rule
+ * Interface for error screens
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Rule
+interface ScreenInterface
 {
-	
+
 }

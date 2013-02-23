@@ -12,11 +12,11 @@
 namespace CursedScript\GUI;
 
 /**
- * The parent class of all screens
+ * The full screen container
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Screen
+class Screen extends Window
 {
 	
 }

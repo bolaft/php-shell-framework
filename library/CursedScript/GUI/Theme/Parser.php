@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\Debug\Exception;
+namespace CursedScript\GUI\Theme;
 
 /**
- * The default exception screen
+ * Parser for .theme.yml files
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Screen extends ScreenAbstract
+class Parser
 {
-
+	
 }

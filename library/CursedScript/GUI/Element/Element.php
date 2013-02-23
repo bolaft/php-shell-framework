@@ -16,7 +16,7 @@ namespace CursedScript\GUI\Element;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Element
+abstract class Element implements ElementInterface
 {
 	
 }

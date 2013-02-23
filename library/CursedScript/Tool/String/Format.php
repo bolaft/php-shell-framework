@@ -50,6 +50,12 @@ class Format
         return preg_replace_callback('/_([a-z])/', $func, $string);
     }
 
+    /**
+     * Removes the namespace section of a class name
+     * 
+     * @param  string $class
+     * @return string
+     */
     public static function removeNamespace($class)
     {
         $class = explode('\\', $class);

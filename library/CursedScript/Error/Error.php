@@ -9,24 +9,34 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\Debug\Exception;
+namespace CursedScript\Error;
 
 /**
- * Represents a PHP exception
+ * Represents a PHP error
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Exception
+class Error
 {
-	/**
-	 * @var string
-	 */
-	protected $message;
+	public static $levels = array(
+		2    => 'E_WARNING',
+		8    => 'E_NOTICE',
+		256  => 'E_USER_ERROR',
+		512  => 'E_USER_WARNING',
+		1024 => 'E_USER_NOTICE',
+		4096 => 'E_RECOVERABLE_ERROR',
+		8191 => 'E_ALL',
+	);
 
 	/**
 	 * @var int
 	 */
-	protected $code;
+	protected $level;
+
+	/**
+	 * @var string
+	 */
+	protected $message;
 
 	/**
 	 * @var string
@@ -41,11 +51,37 @@ class Exception
 	/**
 	 * @var array
 	 */
-	protected $trace;
+	protected $context;
 
+	/**
+	 * Displays the error
+	 */
 	public function display()
 	{
-		
+		var_dump((array) $this);
+	}
+
+	/**
+	 * Get level
+	 *
+	 * @return int
+	 */
+	public function getLevel()
+	{
+	    return $this->level;
+	}
+	
+	/**
+	 * Set level
+	 *
+	 * @param  int $level
+	 * @return Error
+	 */
+	public function setLevel($level)
+	{
+	    $this->level = $level;
+	
+	    return $this;
 	}
 
 	/**
@@ -62,34 +98,11 @@ class Exception
 	 * Set message
 	 *
 	 * @param  string $message
-	 * @return Exception
+	 * @return Error
 	 */
 	public function setMessage($message)
 	{
 	    $this->message = $message;
-	
-	    return $this;
-	}
-
-	/**
-	 * Get code
-	 *
-	 * @return int
-	 */
-	public function getCode()
-	{
-	    return $this->code;
-	}
-	
-	/**
-	 * Set code
-	 *
-	 * @param  int $code
-	 * @return Exception
-	 */
-	public function setCode($code)
-	{
-	    $this->code = $code;
 	
 	    return $this;
 	}
@@ -108,7 +121,7 @@ class Exception
 	 * Set file
 	 *
 	 * @param  string $file
-	 * @return Exception
+	 * @return Error
 	 */
 	public function setFile($file)
 	{
@@ -131,7 +144,7 @@ class Exception
 	 * Set line
 	 *
 	 * @param  int $line
-	 * @return Exception
+	 * @return Error
 	 */
 	public function setLine($line)
 	{
@@ -141,24 +154,24 @@ class Exception
 	}
 
 	/**
-	 * Get trace
+	 * Get context
 	 *
-	 * @return int
+	 * @return array
 	 */
-	public function getTrace()
+	public function getContext()
 	{
-	    return $this->trace;
+	    return $this->context;
 	}
 	
 	/**
-	 * Set trace
+	 * Set context
 	 *
-	 * @param  int $trace
-	 * @return Exception
+	 * @param  array $context
+	 * @return Error
 	 */
-	public function setTrace($trace)
+	public function setContext($context)
 	{
-	    $this->trace = $trace;
+	    $this->context = $context;
 	
 	    return $this;
 	}

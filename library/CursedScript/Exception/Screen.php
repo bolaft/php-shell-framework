@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\GUI\Theme;
+namespace CursedScript\Exception;
 
 /**
- * Represents a style rule
+ * The default exception screen
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Style
+class Screen extends extends \CursedScript\GUI\Screen implements IScreen
 {
-	
+
 }

@@ -16,10 +16,20 @@
  */
 class ExampleScript extends \CursedScript\Script
 {
+	/**
+	 * {@inheritDoc}
+	 */
+	public function init()
+	{
+		$this->getLogger()->setDir(__DIR__ . '/var/log');
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function run()
 	{
-		\CursedScript\Debug\Log\Logger::setDir(__DIR__ . '/var/log');
-
-		parent::run();
+		throw new Exception("MyCustomException", 1);
+		
 	}
 }

@@ -11,44 +11,120 @@
 
 namespace CursedScript;
 
+use \CursedScript\Log;
+
 /**
  * The Script class provides advanced console functionalities to classes who extend it
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Script 
+abstract class Script
 {
 	/**
-	 * @var CursedScript
+	 * @var Script
 	 * @static
 	 */
-	public static $instance = null;
+	public static $instance;
 
-	public function __construct()
+	/**
+	 * @var Log\Logger
+	 * @static
+	 */
+	public $logger;
+
+	/**
+	 * Get instance
+	 *
+	 * @return Script
+	 */
+	public static function getInstance()
+	{
+	    return Script::$instance;
+	}
+
+	/**
+	 * Constructor
+	 * Sets exception and error handlers, then starts, runs and stops the script
+	 */
+	final public function __construct()
 	{
 		self::$instance = $this;
 
-		set_error_handler(array(new Debug\Error\Handler(), 'handleError'));
-		set_exception_handler(array(new Debug\Exception\Handler(), 'handleException'));
+		$this->logger  = new Log\Logger();
 
-		$this->run();
+		set_error_handler(array(new Error\Handler(), 'handleError'));
+		set_exception_handler(array(new Exception\Handler(), 'handleException'));
+
+		@$this->init();
+		@$this->start();
+		@$this->run();
+		@$this->stop();
 	}
 
-	public function __destruct() 
+	/**
+	 * Destructor
+	 * Restores exception and error handlers
+	 */
+	final public function __destruct() 
 	{
 		restore_exception_handler();
 		restore_error_handler();
 	}
 
-	public function run()
+	/**
+	 * Starts the script
+	 */
+	final public function start()
 	{
-		Debug\Log\Logger::log('info', array('Running CursedScript'));
+		new Log\Log('INFO', array('Starting CursedScript'));
 	}
 
-	public function stop()
+	/**
+	 * Stops the script
+	 */
+	final public function stop()
 	{
-		Debug\Log\Logger::log('info', array('Stopping CursedScript'));
+		new Log\Log('INFO', array('Stopping CursedScript'));
 
 		$this->__destruct();
+	}
+
+	/**
+	 * Custom script initialization
+	 */
+	public function init()
+	{
+
+	}
+
+	/**
+	 * Custom script execution
+	 */
+	public function run()
+	{
+
+	}
+
+	/**
+	 * Get logger
+	 *
+	 * @return Log\Logger
+	 */
+	public function getLogger()
+	{
+	    return $this->logger;
+	}
+	
+	/**
+	 * Set logger
+	 *
+	 * @param  Log\Logger $logger
+	 * @return Script
+	 */
+	public function setLogger($logger)
+	{
+	    $this->logger = $logger;
+	
+	    return $this;
 	}
 }

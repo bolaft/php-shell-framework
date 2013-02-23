@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\Debug\Error;
+namespace CursedScript\GUI;
 
 /**
- * The error screen
+ * Represents a graphical window
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Screen extends ScreenAbstract
+class Window
 {
-
+	
 }
