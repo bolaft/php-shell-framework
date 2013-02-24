@@ -9,16 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\Error;
-
-use \CursedScript\GUI;
+namespace CursedScript\GUI\Element\Form\Collection;
 
 /**
- * The error screen
+ * Radio button for forms
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Screen extends GUI\Screen implements ScreenInterface
+class Radio extends Checkbox
 {
-
+	
 }

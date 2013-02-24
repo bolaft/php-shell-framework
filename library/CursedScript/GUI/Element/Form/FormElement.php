@@ -9,14 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript;
+namespace CursedScript\GUI\Element\Form;
+
+use CursedScript\GUI\Element\Element;
+use CursedScript\GUI\Element\ElementInterface;
 
 /**
- * The CursedScript class provides functionalities to script classes who extend it
+ * The parent class of all GUI form elements
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class CursedScriptTest extends \PHPUnit_Framework_TestCase
+abstract class FormElement extends Element implements ElementInterface, FormElementInterface
 {
 	
 }

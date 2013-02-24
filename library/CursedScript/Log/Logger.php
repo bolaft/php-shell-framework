@@ -41,12 +41,15 @@ class Logger
 	 * @param  array $data
 	 * @param  string $channel
 	 */
-	public function handle($log)
+	public function handle(Log $log)
 	{
 		$channel = $log->getChannel();
 		
 		if (isset($this->dir)){
-			$write = function($channel) use ($log){
+			$write = function($channel) use ($log)
+			{
+				if (is_null($channel)) return false;
+
 		        $dir  = $this->dir . $channel;
 		        $file = $dir . '/' . date('d_m_Y') . '.log.json';
 
@@ -54,7 +57,11 @@ class Logger
 		        	if ((is_dir($dir) or @mkdir($dir)) and @fopen($file, 'x+')){
 		        		$contents = array('[' . PHP_EOL);
 		        	} else {
-		        		throw new \Exception('Invalid log directory', 1);
+		        		if ($channel !== Log::$error_channel && $channel !== Log::$exception_channel){
+		        			throw new \Exception('Invalid log directory', 1);
+		        		}
+
+		        		return false;
 		        	}
 		        } else {
 		        	$contents = file($file);
@@ -68,9 +75,9 @@ class Logger
 		        @file_put_contents($file, implode($contents));
 			};
 
-	        $write('all');
+	        $write(Log::$main_channel);
 
-	        if (!is_null($channel) && $channel !== 'all'){
+	        if (!is_null($channel) && $channel !== Log::$main_channel){
 	        	$write($channel);
 	        }
 		}
@@ -106,7 +113,7 @@ class Logger
 	 * 
 	 * @param callable $handle
 	 */
-	public function setHandle($handle)
+	public function setHandle(callable $handle)
 	{
 		$this->handle = $handle;
 

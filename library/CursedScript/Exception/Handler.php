@@ -26,12 +26,12 @@ class Handler
 	 * 
 	 * @param  \Exception $exception
 	 */
-	public function handleException($exception)
+	public function handleException(\Exception $exception)
 	{
-		new Log('EXCEPTION', array($exception), 'errors');
+		new Log('EXCEPTION', func_get_args(), Log::$exception_channel);
 
-		echo $exception;
-
+		var_dump($exception);
+		
 		\CursedScript\Script::$instance->stop();
 	}
 }

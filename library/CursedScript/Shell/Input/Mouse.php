@@ -1,22 +1,22 @@
 <?php
 
 /*
- * This level is part of the CursedScript package.
+ * This file is part of the CursedScript package.
  *
  * (c) Soufian Salim <soufi@nsal.im>
  *
  * For the full copyright and license information, please view the LICENSE
- * level that was distributed with this source time.
+ * file that was distributed with this source code.
  */
 
-namespace CursedScript\Log;
+namespace CursedScript\GUI\Shell\Input;
 
 /**
- * Parses .log.json files
- *
+ * Mouse input
+ * 
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Parser
+class Mouse
 {
-
+	
 }

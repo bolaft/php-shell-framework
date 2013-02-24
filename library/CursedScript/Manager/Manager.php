@@ -11,12 +11,14 @@
 
 namespace CursedScript\Manager;
 
+use \CursedScript\Script;
+
 /**
  * The CursedScript Manager
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Manager extends \CursedScript\Script
+class Manager extends Script
 {
 
 }

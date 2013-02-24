@@ -12,6 +12,7 @@
 namespace CursedScript\Error;
 
 use \CursedScript\Log\Log;
+use \CursedScript\Script;
 
 /**
  * Handles PHP errors
@@ -30,9 +31,9 @@ class Handler
 	 * @param  int $line
 	 * @param  array $context
 	 */
-	public function handleError($level, $message, $file = null, $line = null, $context = null)
+	public function handleError($level, $message, $file = null, $line = null, array $context = null)
 	{
-		new Log('ERROR', func_get_args(), 'errors');
+		new Log('ERROR', func_get_args(), Log::$error_channel);
 
 		$error = new Error();
 		$error->setLevel($level)
@@ -41,8 +42,8 @@ class Handler
 			  ->setLine($line)
 			  ->setContext($context);
 
-		$error->display();
+		var_dump($error);
 
-		\CursedScript\Script::$instance->stop();
+		Script::$instance->stop();
 	}
 }

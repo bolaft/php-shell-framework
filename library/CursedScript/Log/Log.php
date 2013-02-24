@@ -1,18 +1,18 @@
 <?php
 
 /*
- * This level is part of the CursedScript package.
+ * This code is part of the CursedScript package.
  *
  * (c) Soufian Salim <soufi@nsal.im>
  *
  * For the full copyright and license information, please view the LICENSE
- * level that was distributed with this source time.
+ * code that was distributed with this source time.
  */
 
 namespace CursedScript\Log;
 
 /**
- * Represents a log level
+ * Represents a log code
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
@@ -20,8 +20,44 @@ class Log
 {
 	/**
 	 * @var string
+	 * @static
 	 */
-	protected $level;
+	public static $main_channel;
+
+	/**
+	 * @var string
+	 * @static
+	 */
+	public static $info_channel;
+
+	/**
+	 * @var string
+	 * @static
+	 */
+	public static $input_channel;
+
+	/**
+	 * @var string
+	 * @static
+	 */
+	public static $warning_channel;
+
+	/**
+	 * @var string
+	 * @static
+	 */
+	public static $exception_channel;
+
+	/**
+	 * @var string
+	 * @static
+	 */
+	public static $error_channel;
+
+	/**
+	 * @var string
+	 */
+	protected $code;
 
 	/**
 	 * @var string
@@ -43,13 +79,35 @@ class Log
 	 */
 	protected $channel;
 
-	public function __construct($level, $data, $channel = 'info')
+	/**
+	 * Sets the log channels
+	 * 
+	 * @param array $channels
+	 */
+	public static function setChannels(array $channels = array())
+	{
+		if(isset($config['main']))      Log::$main_channel      = $config['main'];
+		if(isset($config['info']))      Log::$info_channel      = $config['info'];
+		if(isset($config['input']))     Log::$input_channel     = $config['input'];
+		if(isset($config['warning']))   Log::$warning_channel   = $config['warning'];
+		if(isset($config['exception'])) Log::$exception_channel = $config['exception'];
+		if(isset($config['error']))     Log::$error_channel     = $config['error'];
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param int $code
+	 * @param array  $data
+	 * @param string $channel
+	 */
+	public function __construct($code, array $data, $channel = null)
 	{
 		$this->setDate(date('d-m-Y'))
 			 ->setTime(date('H:i:s'))
-			 ->setChannel($channel)
-			 ->setLevel($level)
-			 ->setData($data);
+			 ->setCode($code)
+			 ->setData($data)
+			 ->setChannel($channel);
 		
 		call_user_func(\CursedScript\Script::getInstance()->getLogger()->getHandle(), $this);
 	}
@@ -71,24 +129,24 @@ class Log
 	}
 
 	/**
-	 * Get level
+	 * Get code
 	 *
 	 * @return string
 	 */
-	public function getLevel()
+	public function getCode()
 	{
-	    return $this->level;
+	    return $this->code;
 	}
 	
 	/**
-	 * Set level
+	 * Set code
 	 *
-	 * @param  string $level
+	 * @param  string $code
 	 * @return Log
 	 */
-	public function setLevel($level)
+	public function setCode($code)
 	{
-	    $this->level = $level;
+	    $this->code = $code;
 	
 	    return $this;
 	}
@@ -155,7 +213,7 @@ class Log
 	 * @param  array $data
 	 * @return Log
 	 */
-	public function setData($data)
+	public function setData(array $data)
 	{
 	    $this->data = $data;
 	

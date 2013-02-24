@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\Error;
+namespace CursedScript\GUI\Element\Form\Collection;
 
-use \CursedScript\GUI;
+use \CursedScript\GUI\Element\Form\FormElement;
 
 /**
- * The error screen
+ * Input field for forms
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Screen extends GUI\Screen implements ScreenInterface
+class Input extends FormElement
 {
-
+	
 }

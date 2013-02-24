@@ -11,7 +11,8 @@
 
 namespace CursedScript;
 
-use \CursedScript\Log;
+use \CursedScript\Log\Log;
+use \CursedScript\Log\Logger;
 
 /**
  * The Script class provides advanced console functionalities to classes who extend it
@@ -27,10 +28,19 @@ abstract class Script
 	public static $instance;
 
 	/**
-	 * @var Log\Logger
-	 * @static
+	 * @var string
 	 */
-	public $logger;
+	private $ini;
+
+	/**
+	 * @var Log\Logger
+	 */
+	private $logger;
+
+	/**
+	 * @var resource
+	 */
+	private $ncurses;
 
 	/**
 	 * Get instance
@@ -50,15 +60,16 @@ abstract class Script
 	{
 		self::$instance = $this;
 
-		$this->logger  = new Log\Logger();
+		$this->ncurses = ncurses_init();
+		$this->logger  = new Logger();
 
 		set_error_handler(array(new Error\Handler(), 'handleError'));
 		set_exception_handler(array(new Exception\Handler(), 'handleException'));
 
-		@$this->init();
-		@$this->start();
-		@$this->run();
-		@$this->stop();
+		$this->init();
+		$this->start();
+		$this->run();
+		$this->stop();
 	}
 
 	/**
@@ -69,6 +80,8 @@ abstract class Script
 	{
 		restore_exception_handler();
 		restore_error_handler();
+
+		ncurses_end();
 	}
 
 	/**
@@ -76,7 +89,16 @@ abstract class Script
 	 */
 	final public function start()
 	{
-		new Log\Log('INFO', array('Starting CursedScript'));
+		if (!isset($this->ini)) $this->ini = dirname(__DIR__) . '/settings.ini';
+
+		if (file_exists($this->ini)){
+			$config = parse_ini_file($this->ini, true);
+		}
+
+		if(isset($config['channels'])) Log::setChannels($config['channels']);
+		if(isset($config['logger']['dir'])) $this->logger->setDir($config['logger']['dir']);
+
+		new Log('SCRIPT_STARTS', array($config), Log::$info_channel);
 	}
 
 	/**
@@ -84,7 +106,7 @@ abstract class Script
 	 */
 	final public function stop()
 	{
-		new Log\Log('INFO', array('Stopping CursedScript'));
+		new Log('SCRIPT_STOPPED', array(), Log::$info_channel);
 
 		$this->__destruct();
 	}
@@ -92,17 +114,34 @@ abstract class Script
 	/**
 	 * Custom script initialization
 	 */
-	public function init()
-	{
-
-	}
+	abstract public function init();
 
 	/**
 	 * Custom script execution
 	 */
-	public function run()
-	{
+	abstract public function run();
 
+	/**
+	 * Get ini
+	 *
+	 * @return string
+	 */
+	final public function getIni()
+	{
+	    return $this->ini;
+	}
+	
+	/**
+	 * Set ini
+	 *
+	 * @param  string $ini
+	 * @return Script
+	 */
+	final public function setIni($ini)
+	{
+	    $this->ini = $ini;
+	
+	    return $this;
 	}
 
 	/**
@@ -110,7 +149,7 @@ abstract class Script
 	 *
 	 * @return Log\Logger
 	 */
-	public function getLogger()
+	final public function getLogger()
 	{
 	    return $this->logger;
 	}
@@ -121,9 +160,32 @@ abstract class Script
 	 * @param  Log\Logger $logger
 	 * @return Script
 	 */
-	public function setLogger($logger)
+	final public function setLogger(Log\Logger $logger)
 	{
 	    $this->logger = $logger;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get ncurses
+	 *
+	 * @return resource
+	 */
+	final public function getNcurses()
+	{
+	    return $this->ncurses;
+	}
+	
+	/**
+	 * Set ncurses
+	 *
+	 * @param  resource $ncurses
+	 * @return Script
+	 */
+	final public function setNcurses($ncurses)
+	{
+	    $this->ncurses = $ncurses;
 	
 	    return $this;
 	}

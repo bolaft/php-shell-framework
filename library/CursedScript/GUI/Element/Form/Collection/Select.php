@@ -9,14 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\GUI\Shell;
+namespace CursedScript\GUI\Element\Form\Collection;
+
+use \CursedScript\GUI\Element\Form\FormElement;
 
 /**
- * The parent class of all commands
- * 
+ * List selector for forms
+ *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Command
+class Select extends FormElement
 {
 	
 }

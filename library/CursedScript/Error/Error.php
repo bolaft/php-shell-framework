@@ -54,14 +54,6 @@ class Error
 	protected $context;
 
 	/**
-	 * Displays the error
-	 */
-	public function display()
-	{
-		var_dump((array) $this);
-	}
-
-	/**
 	 * Get level
 	 *
 	 * @return int
@@ -169,7 +161,7 @@ class Error
 	 * @param  array $context
 	 * @return Error
 	 */
-	public function setContext($context)
+	public function setContext(array $context)
 	{
 	    $this->context = $context;
 	

@@ -11,12 +11,14 @@
 
 namespace CursedScript\Exception;
 
+use \CursedScript\GUI;
+
 /**
  * The default exception screen
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Screen extends extends \CursedScript\GUI\Screen implements IScreen
+class Screen extends GUI\Screen implements ScreenInterface
 {
 
 }

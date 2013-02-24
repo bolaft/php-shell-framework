@@ -9,16 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\Error;
-
-use \CursedScript\GUI;
+namespace CursedScript\GUI\Theme;
 
 /**
- * The error screen
+ * Interface for stylizable GUI objects
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Screen extends GUI\Screen implements ScreenInterface
+interface StylizableInterface
 {
-
+	
 }

@@ -19,20 +19,10 @@ namespace CursedScript\Exception;
 class Exception extends \Exception
 {
 	/**
-	 * Sets the previous 
-	 * 
-	 * @param \Exception $exception
+	 * {@inheritDoc}
 	 */
-	public function __construct($message, $code = 0, Exception $previous = null) 
+	public function __construct($message, $code = 0, \Exception $previous = null) 
 	{
     	parent::__construct($message, $code, $previous);
-	}
-
-	/**
-	 * Displays the exception
-	 */
-	public function display()
-	{
-		echo $this;
 	}
 }

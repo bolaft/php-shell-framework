@@ -9,16 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\Error;
-
-use \CursedScript\GUI;
+namespace CursedScript\GUI\Shell\Command;
 
 /**
- * The error screen
- *
+ * The parent class of all commands
+ * 
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Screen extends GUI\Screen implements ScreenInterface
+abstract class Command
 {
-
+	
 }

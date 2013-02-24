@@ -9,19 +9,22 @@
  * file that was distributed with this source code.
  */
 
+use \CursedScript\Script;
+use \CursedScript\GUI;
+use \CursedScript\Shell\Input\Keyboard;
 /**
  * The ExampleScript class illustrates some of the CursedScript functionalities ; it can be run from the terminal with /application/run.php
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class ExampleScript extends \CursedScript\Script
+class ExampleScript extends Script
 {
 	/**
 	 * {@inheritDoc}
 	 */
 	public function init()
 	{
-		$this->getLogger()->setDir(__DIR__ . '/var/log');
+		$this->setIni(__DIR__ . '/settings.ini');
 	}
 
 	/**
@@ -29,7 +32,16 @@ class ExampleScript extends \CursedScript\Script
 	 */
 	public function run()
 	{
-		throw new Exception("MyCustomException", 1);
-		
+		$screen = new GUI\Screen();
+		$screen->border(0, 0, 0, 0, 0, 0, 0, 0);
+
+		$window = new GUI\Window(10, 30, 7, 25);
+		$window->border(0, 0, 0, 0, 0, 0, 0, 0);
+		$window->write('MyWindow', 1, 1);
+
+		$screen->addChild($window);
+		$screen->paint();
+
+		$input = Keyboard::input();
 	}
 }
