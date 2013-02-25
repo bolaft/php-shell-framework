@@ -86,12 +86,12 @@ class Log
 	 */
 	public static function setChannels(array $channels = array())
 	{
-		if(isset($config['main']))      Log::$main_channel      = $config['main'];
-		if(isset($config['info']))      Log::$info_channel      = $config['info'];
-		if(isset($config['input']))     Log::$input_channel     = $config['input'];
-		if(isset($config['warning']))   Log::$warning_channel   = $config['warning'];
-		if(isset($config['exception'])) Log::$exception_channel = $config['exception'];
-		if(isset($config['error']))     Log::$error_channel     = $config['error'];
+		if(isset($channels['main']))      Log::$main_channel      = $channels['main'];
+		if(isset($channels['info']))      Log::$info_channel      = $channels['info'];
+		if(isset($channels['input']))     Log::$input_channel     = $channels['input'];
+		if(isset($channels['warning']))   Log::$warning_channel   = $channels['warning'];
+		if(isset($channels['exception'])) Log::$exception_channel = $channels['exception'];
+		if(isset($channels['error']))     Log::$error_channel     = $channels['error'];
 	}
 
 	/**

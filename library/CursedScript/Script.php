@@ -60,7 +60,6 @@ abstract class Script
 	{
 		self::$instance = $this;
 
-		$this->ncurses = ncurses_init();
 		$this->logger  = new Logger();
 
 		set_error_handler(array(new Error\Handler(), 'handleError'));
@@ -99,6 +98,8 @@ abstract class Script
 		if(isset($config['logger']['dir'])) $this->logger->setDir($config['logger']['dir']);
 
 		new Log('SCRIPT_STARTS', array($config), Log::$info_channel);
+
+		$this->ncurses = ncurses_init();
 	}
 
 	/**
