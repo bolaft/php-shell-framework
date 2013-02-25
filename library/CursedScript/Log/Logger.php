@@ -46,7 +46,6 @@ class Logger
 		$channel = $log->getChannel();
 		
 		if (isset($this->dir)){
-
 			$write = function($channel) use ($log)
 			{
 				if (is_null($channel)) return false;
