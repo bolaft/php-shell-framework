@@ -29,11 +29,11 @@ class Screen extends Window
 	/**
 	 * {@inheritDoc}
 	 */
-	public function border($left, $right, $top, $bottom, $tl_corner, $tr_corner, $bl_corner, $br_corner)
+	public function border($left = 0, $right = 0, $top = 0, $bottom = 0, $tl_corner = 0, $tr_corner = 0, $bl_corner = 0, $br_corner = 0)
 	{
-		call_user_func_array('ncurses_border', func_get_args());
+		$this->borders = array($left, $right, $top, $bottom, $tl_corner, $tr_corner, $bl_corner, $br_corner);
 
-		$this->borders = func_get_args();
+		call_user_func_array('ncurses_border', $this->borders);
 
 		return $this;
 	}

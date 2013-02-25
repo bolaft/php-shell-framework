@@ -10,7 +10,8 @@
  */
 
 use \CursedScript\Script;
-use \CursedScript\GUI;
+use \CursedScript\GUI\Screen;
+use \CursedScript\GUI\Window;
 use \CursedScript\Shell\Input\Keyboard;
 /**
  * The ExampleScript class illustrates some of the CursedScript functionalities ; it can be run from the terminal with /application/run.php
@@ -32,16 +33,20 @@ class ExampleScript extends Script
 	 */
 	public function run()
 	{
-		$screen = new GUI\Screen();
-		$screen->border(0, 0, 0, 0, 0, 0, 0, 0);
+		$screen = new Screen();
 
-		$window = new GUI\Window(10, 30, 7, 25);
-		$window->border(0, 0, 0, 0, 0, 0, 0, 0);
-		$window->write('MyWindow', 1, 1);
+		$window = new Window(0, 50, 0, 0);
+		$window->write('Yeah! My window!');
+
+		$window2 = new Window(8, 30, 12, 60);
+		$window2->write('Press "q" to exit');
 
 		$screen->addChild($window);
+		$screen->addChild($window2);
 		$screen->paint();
 
-		$input = Keyboard::input();
+		while (true){
+			if (chr(Keyboard::input()) == 'q') break;
+		}
 	}
 }

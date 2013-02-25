@@ -46,11 +46,13 @@ class Logger
 		$channel = $log->getChannel();
 		
 		if (isset($this->dir)){
-			$write = function($channel) use ($log)
+			$dir = $this->dir;
+
+			$write = function($channel) use ($log, $dir)
 			{
 				if (is_null($channel)) return false;
 
-		        $dir  = $this->dir . $channel;
+		        $dir  = $dir . $channel;
 		        $file = $dir . '/' . date('d_m_Y') . '.log.json';
 
 		        if (!file_exists($file)){

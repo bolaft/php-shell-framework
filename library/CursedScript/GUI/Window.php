@@ -36,6 +36,11 @@ class Window implements StylizableInterface
 	/**
 	 * @var array
 	 */
+	protected $parent;
+
+	/**
+	 * @var array
+	 */
 	protected $children = array();
 
 	/**
@@ -46,11 +51,13 @@ class Window implements StylizableInterface
 	 * @param int $y
 	 * @param int $x
 	 */
-	public function __construct($rows, $cols, $y, $x)
+	public function __construct($rows, $cols, $y, $x, $border = true)
 	{
 		new Log('NEW_WINDOW', func_get_args(), Log::$info_channel);
 
 		$this->resource = ncurses_newwin($rows, $cols, $y, $x);
+
+		if ($border === true) $this->border();
 	}
 
 	/**
@@ -66,24 +73,24 @@ class Window implements StylizableInterface
 	 * @param  int $br_corner
 	 * @return Window
 	 */
-	public function border($left, $right, $top, $bottom, $tl_corner, $tr_corner, $bl_corner, $br_corner)
+	public function border($left = 0, $right = 0, $top = 0, $bottom = 0, $tl_corner = 0, $tr_corner = 0, $bl_corner = 0, $br_corner = 0)
 	{
-		call_user_func_array('ncurses_wborder', array_merge(array($this->resource), func_get_args()));
+		$this->borders = array($left, $right, $top, $bottom, $tl_corner, $tr_corner, $bl_corner, $br_corner);
 
-		$this->borders = func_get_args();
+		call_user_func_array('ncurses_wborder', array_merge(array($this->resource), $this->borders));
 
 		return $this;
 	}
 
 	/**
-	 * Writes a string at the given popsition
+	 * Writes a string at the given position
 	 * 
 	 * @param  string $string
 	 * @param  int $y
 	 * @param  int $x
 	 * @return Window
 	 */
-	public function write($string, $y, $x)
+	public function write($string, $y = 1, $x = 1)
 	{
 		ncurses_mvwaddstr($this->resource, $y, $x, $string);
 
@@ -110,6 +117,29 @@ class Window implements StylizableInterface
 	{
 	    $this->resource = $resource;
 	
+	    return $this;
+	}
+
+	/**
+	 * Get parent
+	 *
+	 * @return type
+	 */
+	public function getParent()
+	{
+	    return $this->parent;
+	}
+	
+	/**
+	 * Set parent
+	 *
+	 * @param  type $parent
+	 * @return type
+	 */
+	public function setParent($parent)
+	{
+	    $this->parent = $parent;
+	    
 	    return $this;
 	}
 
@@ -145,6 +175,7 @@ class Window implements StylizableInterface
 	public function addChild(Window $child)
 	{
 	    $this->children[] = $child;
+		$child->setParent($this);
 	
 	    return $this;
 	}
