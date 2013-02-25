@@ -11,7 +11,7 @@
 
 namespace CursedScript\GUI;
 
-use CursedScript\GUI\Theme\Stylizable;
+use CursedScript\GUI\Theme\Visual;
 use CursedScript\Log\Log;
 
 /**
@@ -19,7 +19,7 @@ use CursedScript\Log\Log;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Window extends Stylizable
+class Window extends Visual
 {
 	/**
 	 * The ncurses window resource

@@ -16,7 +16,7 @@ namespace CursedScript\Exception;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Exception extends \Exception
+class Exception extends \Exception implements ExceptionInterface
 {
 	/**
 	 * {@inheritDoc}

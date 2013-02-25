@@ -11,15 +11,14 @@
 
 namespace CursedScript;
 
-use \CursedScript\Log\Log;
-use \CursedScript\Log\Handler;
+use \CursedScript\GUI\GUI;
 
 /**
  * The Script class provides advanced console functionalities to classes who extend it
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Script
+abstract class Script implements GUI
 {
 	/**
 	 * @var Script
@@ -70,9 +69,9 @@ abstract class Script
 	{
 		self::$instance = $this;
 
-		$this->log_handler       = new Handler();
-		$this->error_handler     = new Handler();
-		$this->exception_handler = new Handler();
+		$this->log_handler       = new Log\Handler();
+		$this->error_handler     = new Error\Handler();
+		$this->exception_handler = new Exception\Handler();
 
 		$this->init();
 		$this->start();
@@ -109,10 +108,10 @@ abstract class Script
 			$config = parse_ini_file($this->ini, true);
 		}
 
-		if(isset($config['channels'])) Log::setChannels($config['channels']);
+		if(isset($config['channels'])) Log\Log::setChannels($config['channels']);
 		if(isset($config['logger']['dir'])) $this->log_handler->setDir($config['logger']['dir']);
 
-		new Log('SCRIPT_STARTS', array($config), Log::$info_channel);
+		new Log\Log('SCRIPT_STARTS', array($config), Log\Log::$info_channel);
 
 		// Ncurses initialization
 		$this->ncurses = ncurses_init();
@@ -124,7 +123,7 @@ abstract class Script
 	 */
 	final public function stop()
 	{
-		new Log('SCRIPT_STOPPED', array(), Log::$info_channel);
+		new Log\Log('SCRIPT_STOPPED', array(), Log\Log::$info_channel);
 
 		$this->__destruct();
 	}

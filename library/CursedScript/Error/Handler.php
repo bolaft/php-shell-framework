@@ -22,6 +22,14 @@ use \CursedScript\Script;
 class Handler extends \CursedScript\Handler
 {
 	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		$this->handle = array($this, 'echoHandle');
+	}
+
+	/**
 	 * The default error handler
 	 * Logs the event, display the error and stops the script
 	 * 
@@ -31,16 +39,11 @@ class Handler extends \CursedScript\Handler
 	 * @param  int $line
 	 * @param  array $context
 	 */
-	public function handle($level, $message, $file = null, $line = null, array $context = null)
+	public function echoHandle($level, $message, $file = null, $line = null, array $context = null)
 	{
 		new Log('ERROR', func_get_args(), Log::$error_channel);
 
-		$error = new Error();
-		$error->setLevel($level)
-			  ->setMessage($message)
-			  ->setFile($file)
-			  ->setLine($line)
-			  ->setContext($context);
+		$error = new Error($level, $message, $file, $line, $context);
 
 		var_dump($error);
 

@@ -16,7 +16,7 @@ namespace CursedScript\Error;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Error
+class Error implements ErrorInterface
 {
 	public static $levels = array(
 		2    => 'E_WARNING',
@@ -54,6 +54,18 @@ class Error
 	protected $context;
 
 	/**
+	 * @{inheritDoc}
+	 */
+	public function __construct($level, $message, $file = null, $line = null, array $context = null)
+	{
+		$this->setLevel($level)
+			 ->setMessage($message)
+			 ->setFile($file)
+			 ->setLine($line)
+			 ->setContext($context);
+	}
+
+	/**
 	 * Get level
 	 *
 	 * @return int
@@ -75,7 +87,7 @@ class Error
 	
 	    return $this;
 	}
-
+	
 	/**
 	 * Get message
 	 *

@@ -11,12 +11,14 @@
 
 namespace CursedScript\GUI\Theme;
 
+use \CursedScript\GUI\GUI;
+
 /**
- * Represents an element tag
+ * Parent class of all stylizable objects
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Stylizable
+abstract class Visual implements GUI
 {
 	/**
 	 * Style tags

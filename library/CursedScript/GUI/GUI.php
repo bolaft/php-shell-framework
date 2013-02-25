@@ -19,19 +19,10 @@ namespace CursedScript\GUI;
 interface GUI
 {
 	/**
-	 * Positional constants
-	 */
-	
-	const TOP    = 'top';
-	const BOTTOM = 'bottom';
-	const LEFT   = 'left';
-	const RIGHT  = 'right';
-
-	/**
 	 * Line drawing constants
 	 */
 
-	const ULCORNER = ACS_ULCORNER;
+	/*const ULCORNER = ACS_ULCORNER;
 	const LLCORNER = ACS_LLCORNER;
 	const URCORNER = ACS_URCORNER;
 	const LRCORNER = ACS_LRCORNER;
@@ -55,13 +46,13 @@ interface GUI
 	const UARROW   = ACS_UARROW;
 	const BOARD    = ACS_BOARD;
 	const LANTERN  = ACS_LANTERN;
-	const BLOCK    = ACS_BLOCK;
+	const BLOCK    = ACS_BLOCK;*/
 
 	/**
 	 * Character display constants
 	 */
 	
-	const ALT       = NCURSES_A_ALTCHARSET;
+	/*const ALT       = NCURSES_A_ALTCHARSET;
 	const BLINK     = NCURSES_A_BLINK;
 	const BOLD      = NCURSES_A_BOLD;
 	const DIM       = NCURSES_A_DIM;
@@ -69,18 +60,18 @@ interface GUI
 	const PROTECT   = NCURSES_A_PROTECT;
 	const REVERSE   = NCURSES_A_REVERSE;
 	const STANDOUT  = NCURSES_A_STANDOUT;
-	const UNDERLINE = NCURSES_A_UNDERLINE;
+	const UNDERLINE = NCURSES_A_UNDERLINE;*/
 
 	/**
 	 * Color constants
 	 */
 	
-	const BLACK   = COLOR_BLACK;
+	/*const BLACK   = COLOR_BLACK;
 	const BLUE    = COLOR_BLUE;
 	const GREEN   = COLOR_GREEN;
 	const CYAN    = COLOR_CYAN;
 	const RED     = COLOR_RED;
 	const MAGENTA = COLOR_MAGENTA;
 	const YELLOW  = COLOR_YELLOW;
-	const WHITE   = COLOR_WHITE;
+	const WHITE   = COLOR_WHITE;*/
 }

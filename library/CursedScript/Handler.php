@@ -21,19 +21,14 @@ abstract class Handler
 	/**
 	 * @var callable
 	 */
-	private $handle;
-
-	public function __construct()
-	{
-		$this->handle = array($this, 'handle');
-	}
+	protected $handle;
 
 	/**
 	 * Get handle
 	 *
 	 * @return callable
 	 */
-	public function getHandle()
+	final public function getHandle()
 	{
 	    return $this->handle;
 	}
@@ -44,7 +39,7 @@ abstract class Handler
 	 * @param  callable $handle
 	 * @return Handler
 	 */
-	public function setHandle($handle)
+	final public function setHandle($handle)
 	{
 	    $this->handle = $handle;
 	

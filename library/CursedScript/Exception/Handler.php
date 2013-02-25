@@ -21,12 +21,20 @@ use \CursedScript\Log\Log;
 class Handler extends \CursedScript\Handler
 {
 	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		$this->handle = array($this, 'echoHandle');
+	}
+
+	/**
 	 * The default exception handler
 	 * Logs the event, display the exception and stops the script
 	 * 
 	 * @param  \Exception $exception
 	 */
-	public function handle(\Exception $exception)
+	public function echoHandle(\Exception $exception)
 	{
 		new Log('EXCEPTION', func_get_args(), Log::$exception_channel);
 

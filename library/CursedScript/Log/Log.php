@@ -11,12 +11,14 @@
 
 namespace CursedScript\Log;
 
+use \CursedScript\Tool\Json\JsonSerializable;
+
 /**
- * Represents a log code
+ * Represents a log entry
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Log
+class Log implements LogInterface, JsonSerializable
 {
 	/**
 	 * @var string
@@ -80,9 +82,7 @@ class Log
 	protected $channel;
 
 	/**
-	 * Sets the log channels
-	 * 
-	 * @param array $channels
+	 * @{inheritDoc}
 	 */
 	public static function setChannels(array $channels = array())
 	{
@@ -113,11 +113,9 @@ class Log
 	}
 
 	/**
-	 * Returns a json representation of itself
-	 * 
-	 * @return string
+	 * @{inheritDoc}
 	 */
-	public function serialize()
+	public function toJson()
 	{
 		$json = array();
 

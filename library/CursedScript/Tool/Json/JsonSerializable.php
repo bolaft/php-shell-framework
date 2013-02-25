@@ -9,16 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\GUI\Element;
-
-use \CursedScript\GUI\Theme\Visual;
+namespace CursedScript\Tool\Json;
 
 /**
- * The parent class of all GUI elements
+ * Interface for json serializable classes
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Element extends Visual implements GUI
+interface JsonSerializable
 {
-	
+    /**
+     * Returns a json representation of itself
+     * 
+     * @return string
+     */
+    public function toJson();
 }

@@ -24,6 +24,14 @@ class Handler extends \CursedScript\Handler
 	private $dir;
 
 	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		$this->handle = array($this, 'jsonHandle');
+	}
+
+	/**
 	 * The default log handle
 	 * Writes logs in json format in the log directory
 	 * 
@@ -31,7 +39,7 @@ class Handler extends \CursedScript\Handler
 	 * @param  array $data
 	 * @param  string $channel
 	 */
-	public function handle(Log $log)
+	public function jsonHandle(Log $log)
 	{
 		$channel = $log->getChannel();
 		
@@ -61,7 +69,9 @@ class Handler extends \CursedScript\Handler
 		        	$contents[sizeof($contents) - 1] = str_replace(PHP_EOL, ',' . PHP_EOL, $contents[sizeof($contents) - 1]);
 		        }
 
-		        $contents[] = "\t" . $log->serialize() . PHP_EOL;
+		        $log_output = ($log instanceof JsonSerializable) ? $log->toJson() : json_encode((array) $log);
+
+		        $contents[] = "\t" . $log_output . PHP_EOL;
 		        $contents[] = ']';
 
 		        @file_put_contents($file, implode($contents));
