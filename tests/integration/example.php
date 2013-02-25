@@ -36,12 +36,29 @@ class ExampleScript extends Script
 	{
 		$screen = new Screen();
 
-		$window = new Window(4, 12, 1, 20);
-		$window->write('toto est un con');
+		$y = 1;
+		$x = 1;
 
-		$screen->addChild($window);
-		$screen->paint();
+		$new = function($y, $x) use ($screen){
+			$window = new Window(6, 60, $y, $x);
+			$window->write('Press "N" to open a new window or "Q" to quit');
 
-		Keyboard::input('q');
+			$screen->addChild($window);
+			$screen->paint();
+		};
+
+		$new($y, $x);
+
+		$key = Keyboard::input();
+
+		while($key !== 'q'){
+			if ($key == 'n'){
+				$y++;
+				$x++;
+				$new($y, $x);
+			}
+
+			$key = Keyboard::input();
+		};
 	}
 }
