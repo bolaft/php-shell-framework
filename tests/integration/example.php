@@ -42,8 +42,6 @@ class ExampleScript extends Script
 		$screen->addChild($window);
 		$screen->paint();
 
-		while (true){
-			if (chr(Keyboard::input()) == 'q') break;
-		}
+		Keyboard::input('q');
 	}
 }

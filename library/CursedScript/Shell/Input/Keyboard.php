@@ -29,7 +29,7 @@ class Keyboard
 	 */
 	public static function input($expected = null, $length = null)
 	{
-		$input = ncurses_getch();
+		$input = chr(ncurses_getch());
 
 		if (!is_null($expected)){
 			if (is_string($expected)){
@@ -41,17 +41,17 @@ class Keyboard
 			}
 
 			while(!in_array($input, $expected)){
-				$input = ncurses_getch();
+				$input = chr(ncurses_getch());
 			}
 		}
 
 		if (!is_null($length)){
 			if (!is_int($length)){
 				throw new Exception('The "length" parameter must be an integer', 1);
-				
 			}
+
 			while (strlen($input) < $length){
-				
+				$input .= chr(ncurses_getch());
 			}
 		}
 		
