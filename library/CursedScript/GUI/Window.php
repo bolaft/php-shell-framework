@@ -11,7 +11,7 @@
 
 namespace CursedScript\GUI;
 
-use CursedScript\GUI\Theme\StylizableInterface;
+use CursedScript\GUI\Theme\Stylizable;
 use CursedScript\Log\Log;
 
 /**
@@ -19,7 +19,7 @@ use CursedScript\Log\Log;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Window implements StylizableInterface
+class Window extends Stylizable
 {
 	/**
 	 * The ncurses window resource
@@ -95,6 +95,18 @@ class Window implements StylizableInterface
 		ncurses_mvwaddstr($this->resource, $y, $x, $string);
 
 		return $this;
+	}
+
+	/**
+	 * Get style class for stylization
+	 */
+	final public function getStyleClass()
+	{
+		if ($this instanceof Screen){
+			return 'screen';
+		} else {
+			return 'window';
+		}
 	}
 
 	/**

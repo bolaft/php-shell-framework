@@ -12,7 +12,7 @@
 namespace CursedScript;
 
 use \CursedScript\Log\Log;
-use \CursedScript\Log\Logger;
+use \CursedScript\Log\Handler;
 
 /**
  * The Script class provides advanced console functionalities to classes who extend it
@@ -33,14 +33,24 @@ abstract class Script
 	private $ini;
 
 	/**
-	 * @var Log\Logger
-	 */
-	private $logger;
-
-	/**
 	 * @var resource
 	 */
 	private $ncurses;
+
+	/**
+	 * @var Log\Handler
+	 */
+	private $log_handler;
+
+	/**
+	 * @var Error\Handler
+	 */
+	private $error_handler;
+
+	/**
+	 * @var Exception\Handler
+	 */
+	private $exception_handler;
 
 	/**
 	 * Get instance
@@ -60,10 +70,9 @@ abstract class Script
 	{
 		self::$instance = $this;
 
-		$this->logger  = new Logger();
-
-		set_error_handler(array(new Error\Handler(), 'handleError'));
-		set_exception_handler(array(new Exception\Handler(), 'handleException'));
+		$this->log_handler       = new Handler();
+		$this->error_handler     = new Handler();
+		$this->exception_handler = new Handler();
 
 		$this->init();
 		$this->start();
@@ -80,6 +89,7 @@ abstract class Script
 		restore_exception_handler();
 		restore_error_handler();
 
+		ncurses_echo();
 		ncurses_end();
 	}
 
@@ -88,6 +98,11 @@ abstract class Script
 	 */
 	final public function start()
 	{
+		// Handlers
+		set_error_handler($this->error_handler->getHandle());
+		set_exception_handler($this->exception_handler->getHandle());
+
+		// INI settings
 		if (!isset($this->ini)) $this->ini = dirname(__DIR__) . '/settings.ini';
 
 		if (file_exists($this->ini)){
@@ -95,11 +110,13 @@ abstract class Script
 		}
 
 		if(isset($config['channels'])) Log::setChannels($config['channels']);
-		if(isset($config['logger']['dir'])) $this->logger->setDir($config['logger']['dir']);
+		if(isset($config['logger']['dir'])) $this->log_handler->setDir($config['logger']['dir']);
 
 		new Log('SCRIPT_STARTS', array($config), Log::$info_channel);
 
+		// Ncurses initialization
 		$this->ncurses = ncurses_init();
+		ncurses_noecho();
 	}
 
 	/**
@@ -146,29 +163,6 @@ abstract class Script
 	}
 
 	/**
-	 * Get logger
-	 *
-	 * @return Log\Logger
-	 */
-	final public function getLogger()
-	{
-	    return $this->logger;
-	}
-	
-	/**
-	 * Set logger
-	 *
-	 * @param  Log\Logger $logger
-	 * @return Script
-	 */
-	final public function setLogger(Log\Logger $logger)
-	{
-	    $this->logger = $logger;
-	
-	    return $this;
-	}
-
-	/**
 	 * Get ncurses
 	 *
 	 * @return resource
@@ -187,6 +181,75 @@ abstract class Script
 	final public function setNcurses($ncurses)
 	{
 	    $this->ncurses = $ncurses;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get log_handler
+	 *
+	 * @return Log\Handler
+	 */
+	final public function getLogHandler()
+	{
+	    return $this->log_handler;
+	}
+	
+	/**
+	 * Set log_handler
+	 *
+	 * @param  Log\Handler $log_handler
+	 * @return Script
+	 */
+	final public function setLogHandler(Log\Handler $log_handler)
+	{
+	    $this->log_handler = $log_handler;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get error_handler
+	 *
+	 * @return Error\Handler
+	 */
+	public function getErrorHandler()
+	{
+	    return $this->error_handler;
+	}
+	
+	/**
+	 * Set error_handler
+	 *
+	 * @param  Error\Handler $error_handler
+	 * @return Script
+	 */
+	public function setErrorHandler($error_handler)
+	{
+	    $this->error_handler = $error_handler;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get exception_handler
+	 *
+	 * @return Exception\Handler
+	 */
+	public function getExceptionHandler()
+	{
+	    return $this->exception_handler;
+	}
+	
+	/**
+	 * Set exception_handler
+	 *
+	 * @param  Exception\Handler $exception_handler
+	 * @return Script
+	 */
+	public function setExceptionHandler($exception_handler)
+	{
+	    $this->exception_handler = $exception_handler;
 	
 	    return $this;
 	}

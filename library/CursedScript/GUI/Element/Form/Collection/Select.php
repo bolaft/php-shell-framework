@@ -20,5 +20,11 @@ use \CursedScript\GUI\Element\Form\FormElement;
  */
 class Select extends FormElement
 {
-	
+	/**
+	 * Get style class for stylization
+	 */
+	final public function getStyleClass()
+	{
+		return 'select';
+	}
 }

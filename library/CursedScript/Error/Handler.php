@@ -19,7 +19,7 @@ use \CursedScript\Script;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Handler
+class Handler extends \CursedScript\Handler
 {
 	/**
 	 * The default error handler
@@ -31,7 +31,7 @@ class Handler
 	 * @param  int $line
 	 * @param  array $context
 	 */
-	public function handleError($level, $message, $file = null, $line = null, array $context = null)
+	public function handle($level, $message, $file = null, $line = null, array $context = null)
 	{
 		new Log('ERROR', func_get_args(), Log::$error_channel);
 

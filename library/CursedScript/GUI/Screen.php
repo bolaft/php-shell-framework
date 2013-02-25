@@ -41,7 +41,7 @@ class Screen extends Window
 	/**
 	 * {@inheritDoc}
 	 */
-	public function write($string, $y, $x)
+	public function write($string, $y = 1, $x = 1)
 	{
 		ncurses_mvaddstr($y, $x, $string);
 

@@ -18,5 +18,11 @@ namespace CursedScript\GUI\Element\Form\Collection;
  */
 class Radio extends Checkbox
 {
-	
+	/**
+	 * Get style class for stylization
+	 */
+	final public function getStyleClass()
+	{
+		return 'radio';
+	}
 }

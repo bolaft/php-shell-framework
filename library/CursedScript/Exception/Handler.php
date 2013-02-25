@@ -18,7 +18,7 @@ use \CursedScript\Log\Log;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Handler
+class Handler extends \CursedScript\Handler
 {
 	/**
 	 * The default exception handler
@@ -26,7 +26,7 @@ class Handler
 	 * 
 	 * @param  \Exception $exception
 	 */
-	public function handleException(\Exception $exception)
+	public function handle(\Exception $exception)
 	{
 		new Log('EXCEPTION', func_get_args(), Log::$exception_channel);
 

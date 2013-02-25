@@ -11,12 +11,14 @@
 
 namespace CursedScript\GUI\Element;
 
+use \CursedScript\GUI\Theme\Stylizable;
+
 /**
  * The parent class of all GUI elements
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Element implements ElementInterface
+abstract class Element extends Stylizable
 {
 	
 }

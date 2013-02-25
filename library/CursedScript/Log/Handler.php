@@ -12,26 +12,16 @@
 namespace CursedScript\Log;
 
 /**
- * The default logger
+ * The default log handler
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Logger
+class Handler extends \CursedScript\Handler
 {
 	/**
 	 * @var string
 	 */
 	private $dir;
-
-	/**
-	 * @var callable
-	 */
-	private $handle;
-
-	public function __construct()
-	{
-		$this->handle = array($this, 'handle');
-	}
 
 	/**
 	 * The default log handle
@@ -89,7 +79,7 @@ class Logger
 	 * Sets the log directory
 	 * 
 	 * @param string $dir
-	 * @return Logger
+	 * @return Handler
 	 */
 	public function setDir($dir)
 	{
@@ -108,27 +98,5 @@ class Logger
 	public function getDir()
 	{
 		return $this->dir;
-	}
-
-	/**
-	 * Sets the log handle
-	 * 
-	 * @param callable $handle
-	 */
-	public function setHandle(callable $handle)
-	{
-		$this->handle = $handle;
-
-		return $this;
-	}
-
-	/**
-	 * Get handle
-	 * 
-	 * @return callable
-	 */
-	public function getHandle()
-	{
-		return $this->handle;
 	}
 }

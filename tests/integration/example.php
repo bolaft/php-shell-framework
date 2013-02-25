@@ -10,6 +10,7 @@
  */
 
 use \CursedScript\Script;
+use \CursedScript\GUI\GUI;
 use \CursedScript\GUI\Screen;
 use \CursedScript\GUI\Window;
 use \CursedScript\Shell\Input\Keyboard;
@@ -35,14 +36,10 @@ class ExampleScript extends Script
 	{
 		$screen = new Screen();
 
-		$window = new Window(0, 50, 0, 0);
-		$window->write('Yeah! My window!');
-
-		$window2 = new Window(8, 30, 12, 60);
-		$window2->write('Press "q" to exit');
+		$window = new Window(4, 12, 1, 20);
+		$window->write('toto est un con');
 
 		$screen->addChild($window);
-		$screen->addChild($window2);
 		$screen->paint();
 
 		while (true){

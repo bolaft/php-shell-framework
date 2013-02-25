@@ -109,7 +109,7 @@ class Log
 			 ->setData($data)
 			 ->setChannel($channel);
 		
-		call_user_func(\CursedScript\Script::getInstance()->getLogger()->getHandle(), $this);
+		call_user_func(\CursedScript\Script::getInstance()->getLogHandler()->getHandle(), $this);
 	}
 
 	/**
