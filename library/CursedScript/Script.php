@@ -11,14 +11,12 @@
 
 namespace CursedScript;
 
-use \CursedScript\GUI\GUI;
-
 /**
  * The Script class provides advanced console functionalities to classes who extend it
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Script implements GUI
+abstract class Script
 {
 	/**
 	 * @var Script

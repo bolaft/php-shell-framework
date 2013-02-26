@@ -35,11 +35,9 @@ class Handler extends \CursedScript\Handler
 	 * The default log handle
 	 * Writes logs in json format in the log directory
 	 * 
-	 * @param  string $level
-	 * @param  array $data
-	 * @param  string $channel
+	 * @param  Logable log
 	 */
-	public function jsonHandle(Log $log)
+	public function jsonHandle(Logable $log)
 	{
 		$channel = $log->getChannel();
 		

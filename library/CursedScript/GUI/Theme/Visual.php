@@ -11,14 +11,14 @@
 
 namespace CursedScript\GUI\Theme;
 
-use \CursedScript\GUI\GUI;
+use \CursedScript\GUI\Drawable;
 
 /**
  * Parent class of all stylizable objects
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Visual implements GUI
+abstract class Visual implements Drawable
 {
 	/**
 	 * Style tags

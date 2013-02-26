@@ -13,13 +13,14 @@ namespace CursedScript\GUI\Element;
 
 use \CursedScript\GUI\Theme\Visual;
 use \CursedScript\GUI\Window;
+use \CursedScript\GUI\Drawable;
 
 /**
  * The parent class of all GUI elements
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Element extends Visual implements GUI
+abstract class Element extends Visual implements Drawable
 {
 	/**
 	 * @var Window

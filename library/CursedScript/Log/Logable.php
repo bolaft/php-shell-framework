@@ -16,7 +16,7 @@ namespace CursedScript\Log;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-interface LogInterface
+interface Logable
 {
 	/**
 	 * Sets the log channels

@@ -18,7 +18,7 @@ use \CursedScript\Tool\Json\JsonSerializable;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Log implements LogInterface, JsonSerializable
+class Log implements Logable, JsonSerializable
 {
 	/**
 	 * @var string
