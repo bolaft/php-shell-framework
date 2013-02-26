@@ -62,4 +62,17 @@ class Format
 
         return array_pop($class);
     }
+
+    /**
+     * Removes the file name section of a path
+     * 
+     * @param  string $file
+     * @return string
+     */
+    public static function removeFilename($path)
+    {
+        $offset = strrpos($path, '/');
+        
+        return substr($path, 0, $offset);
+    }
 }

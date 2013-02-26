@@ -16,7 +16,7 @@ namespace CursedScript\Tool\Json;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-interface JsonSerializable
+interface Serializable
 {
     /**
      * Returns a json representation of itself

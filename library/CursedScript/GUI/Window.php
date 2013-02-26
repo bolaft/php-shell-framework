@@ -37,12 +37,22 @@ class Window extends Visual
 	/**
 	 * @var int
 	 */
+	protected $width;
+
+	/**
+	 * @var int
+	 */
 	protected $height;
 
 	/**
 	 * @var int
 	 */
-	protected $width;
+	protected $position_y;
+
+	/**
+	 * @var int
+	 */
+	protected $position_x;
 
 	/**
 	 * @var boolean
@@ -92,57 +102,98 @@ class Window extends Visual
 	/**
 	 * Constructor
 	 * 
-	 * @param int $rows
-	 * @param int $cols
+	 * @param int $width
+	 * @param int $height
 	 * @param int $y
 	 * @param int $x
 	 */
-	public function __construct($rows, $cols, $y, $x)
+	public function __construct($width, $height, $y, $x)
 	{
+		$this->width  = $width;
+		$this->height = $height;
+
+		$this->position_y = $y;
+		$this->position_x = $x;
+
 		new Log('NEW_WINDOW', func_get_args(), Log::$info_channel);
 
-		$this->resource = ncurses_newwin($rows, $cols, $y, $x);
+		$this->resource = ncurses_newwin($width, $height, $y, $x);
 	}
 
 	/**
-	 * Draws the window
-	 * 
+	 * /**
+	 * Borders the window
+	 * 	
+	 * @param  boolean $top
+	 * @param  boolean $bottom
+	 * @param  boolean $left
+	 * @param  boolean $right
+	 * @param  boolean $top_left
+	 * @param  boolean $top_right
+	 * @param  boolean $bottom_left
+	 * @param  boolean $bottom_right
 	 * @return Window
 	 */
-	public function draw()
+	public function border($top = null, $bottom = null, $left = null, $right = null, $top_left = null, $top_right = null, $bottom_left = null, $bottom_right = null)
 	{
-		$borders = array();
-
-		$borders[] = $this->border_top          === true ? 0 : 1;
-		$borders[] = $this->border_bottom       === true ? 0 : 1;
-		$borders[] = $this->border_left         === true ? 0 : 1;
-		$borders[] = $this->border_right        === true ? 0 : 1;
-		$borders[] = $this->border_top_left     === true ? 0 : 1;
-		$borders[] = $this->border_top_right    === true ? 0 : 1;
-		$borders[] = $this->border_bottom_left  === true ? 0 : 1;
-		$borders[] = $this->border_bottom_right === true ? 0 : 1;
+		if (!is_null($top))          $this->setTop($top);
+		if (!is_null($bottom))       $this->setBottom($bottom);
+		if (!is_null($left))         $this->setLeft($left);
+		if (!is_null($right))        $this->setRight($right);
+		if (!is_null($top_left))     $this->setTopLeft($top_left);
+		if (!is_null($top_right))    $this->setTopRight($top_right);
+		if (!is_null($bottom_left))  $this->setBottomLeft($bottom_left);
+		if (!is_null($bottom_right)) $this->setBottomRight($bottom_right);
 
 		if ($this instanceof Screen){
-			call_user_func_array('ncurses_border', $borders);
+			call_user_func_array('ncurses_border', $this->getBorders());
 		} else {
-			call_user_func_array('ncurses_wborder', array_merge(array($this->resource), $borders));
+			call_user_func_array('ncurses_wborder', array_merge(array($this->resource), $this->getBorders()));
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Add a visual to the window
+	 * Moves the window
 	 * 
-	 * @param Visual $visual
+	 * @param  int $y
+	 * @param  int $x
 	 * @return Window
 	 */
-	public function add(Visual $visual)
+	public function move($y = null, $x = null)
 	{
-		if ($visual instanceof Element){
-			$this->addElement($visual);
-			$visual->setWindow($this);
+		if (!is_null($y)) $this->setPositionY($y);
+		if (!is_null($x)) $this->setPositionX($x);
+
+		if ($this instanceof Screen){
+			call_user_func_array('ncurses_move', array($this->getPositionY(), $this->getPositionX()));
+		} else {
+			call_user_func_array('ncurses_wmove', array_merge(array($this->resource), array($this->getPositionY(), $this->getPositionX())));
 		}
+		
+		return $this;
+	}
+
+	/**
+	 * Resizes the window
+	 *
+	 * @param int $width
+	 * @param int $height
+	 * @return Window
+	 */
+	public function resize($width = null, $height = null)
+	{
+		if (!is_null($width))  $this->setWidth($width);
+		if (!is_null($height)) $this->setHeight($height);
+
+		if ($this instanceof Screen){
+			throw new \CursedScript\Exception\Exception('Cannot resize a screen object', 1);
+		} else {
+			call_user_func_array('ncurses_wmove', array_merge(array($this->resource), array($this->getPositionY(), $this->getPositionX())));
+		}
+		
+		return $this;
 	}
 
 	/**
@@ -164,6 +215,20 @@ class Window extends Visual
 		return $this;
 	}
 
+
+	/**
+	 * Add a visual to the window
+	 * 
+	 * @param Visual $visual
+	 * @return Window
+	 */
+	public function add(Visual $visual)
+	{
+		if ($visual instanceof Element){
+			$this->addElement($visual);
+			$visual->setWindow($this);
+		}
+	}
 	/**
 	 * Get style class for stylization
 	 */
@@ -174,6 +239,27 @@ class Window extends Visual
 		} else {
 			return 'window';
 		}
+	}
+
+	/**
+	 * Returns all borders as an array
+	 * 
+	 * @return array
+	 */
+	final public function getBorders()
+	{
+		$borders = array();
+
+		$borders[] = $this->border_top          === true ? 0 : 1;
+		$borders[] = $this->border_bottom       === true ? 0 : 1;
+		$borders[] = $this->border_left         === true ? 0 : 1;
+		$borders[] = $this->border_right        === true ? 0 : 1;
+		$borders[] = $this->border_top_left     === true ? 0 : 1;
+		$borders[] = $this->border_top_right    === true ? 0 : 1;
+		$borders[] = $this->border_bottom_left  === true ? 0 : 1;
+		$borders[] = $this->border_bottom_right === true ? 0 : 1;
+
+		return $borders;
 	}
 
 	/**
@@ -272,6 +358,29 @@ class Window extends Visual
 	}
 
 	/**
+	 * Get width
+	 *
+	 * @return int
+	 */
+	public function getWidth()
+	{
+	    return $this->width;
+	}
+	
+	/**
+	 * Set width
+	 *
+	 * @param  int $width
+	 * @return Window
+	 */
+	public function setWidth($width)
+	{
+	    $this->width = $width;
+	
+	    return $this;
+	}
+
+	/**
 	 * Get height
 	 *
 	 * @return int
@@ -295,24 +404,47 @@ class Window extends Visual
 	}
 
 	/**
-	 * Get width
+	 * Get position_y
 	 *
 	 * @return int
 	 */
-	public function getWidth()
+	public function getPositionY()
 	{
-	    return $this->width;
+	    return $this->position_y;
 	}
 	
 	/**
-	 * Set width
+	 * Set position_y
 	 *
-	 * @param  int $width
+	 * @param  int $position_y
 	 * @return Window
 	 */
-	public function setWidth($width)
+	public function setPositionY($position_y)
 	{
-	    $this->width = $width;
+	    $this->position_y = $position_y;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get position_x
+	 *
+	 * @return int
+	 */
+	public function getPositionX()
+	{
+	    return $this->position_x;
+	}
+	
+	/**
+	 * Set position_x
+	 *
+	 * @param  int $position_x
+	 * @return Window
+	 */
+	public function setPositionX($position_x)
+	{
+	    $this->position_x = $position_x;
 	
 	    return $this;
 	}

@@ -35,15 +35,16 @@ class ExampleScript extends Script
 	public function run()
 	{
 		$screen = new Screen();
-		$screen->draw();
+		$screen->border();
 
 		$y = 1;
 		$x = 1;
 
 		$new = function($y, $x) use ($screen){
 			$window = new Window(6, 60, $y, $x);
-			$window->draw();
 			$window->write('Press "N" to open a new window or "Q" to quit');
+			$window->border();
+			$window->move($y + 4, $x + 4);
 
 			$screen->add($window);
 			$screen->paint();

@@ -11,14 +11,14 @@
 
 namespace CursedScript\Log;
 
-use \CursedScript\Tool\Json\JsonSerializable;
+use \CursedScript\Tool\Json\Serializable;
 
 /**
  * Represents a log entry
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class Log implements Logable, JsonSerializable
+class Log implements Logable, Serializable
 {
 	/**
 	 * @var string
@@ -59,11 +59,6 @@ class Log implements Logable, JsonSerializable
 	/**
 	 * @var string
 	 */
-	protected $code;
-
-	/**
-	 * @var string
-	 */
 	protected $date;
 
 	/**
@@ -72,14 +67,19 @@ class Log implements Logable, JsonSerializable
 	protected $time;
 
 	/**
-	 * @var array
+	 * @var string
 	 */
-	protected $data;
+	protected $channel;
 
 	/**
 	 * @var string
 	 */
-	protected $channel;
+	protected $code;
+
+	/**
+	 * @var array
+	 */
+	protected $data;
 
 	/**
 	 * @{inheritDoc}
@@ -124,29 +124,6 @@ class Log implements Logable, JsonSerializable
 	    }
 
 	    return json_encode($json);
-	}
-
-	/**
-	 * Get code
-	 *
-	 * @return string
-	 */
-	public function getCode()
-	{
-	    return $this->code;
-	}
-	
-	/**
-	 * Set code
-	 *
-	 * @param  string $code
-	 * @return Log
-	 */
-	public function setCode($code)
-	{
-	    $this->code = $code;
-	
-	    return $this;
 	}
 
 	/**
@@ -196,24 +173,24 @@ class Log implements Logable, JsonSerializable
 	}
 
 	/**
-	 * Get data
+	 * Get code
 	 *
-	 * @return array
+	 * @return string
 	 */
-	public function getData()
+	public function getCode()
 	{
-	    return $this->data;
+	    return $this->code;
 	}
 	
 	/**
-	 * Set data
+	 * Set code
 	 *
-	 * @param  array $data
+	 * @param  string $code
 	 * @return Log
 	 */
-	public function setData(array $data)
+	public function setCode($code)
 	{
-	    $this->data = $data;
+	    $this->code = $code;
 	
 	    return $this;
 	}
@@ -237,6 +214,29 @@ class Log implements Logable, JsonSerializable
 	public function setChannel($channel)
 	{
 	    $this->channel = $channel;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get data
+	 *
+	 * @return array
+	 */
+	public function getData()
+	{
+	    return $this->data;
+	}
+	
+	/**
+	 * Set data
+	 *
+	 * @param  array $data
+	 * @return Log
+	 */
+	public function setData(array $data)
+	{
+	    $this->data = $data;
 	
 	    return $this;
 	}

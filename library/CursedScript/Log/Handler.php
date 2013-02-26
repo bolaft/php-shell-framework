@@ -11,6 +11,9 @@
 
 namespace CursedScript\Log;
 
+use CursedScript\Tool\FileSystem\Explorer;
+use CursedScript\Tool\Json;
+
 /**
  * The default log handler
  *
@@ -32,7 +35,6 @@ class Handler extends \CursedScript\Handler
 	}
 
 	/**
-	 * The default log handle
 	 * Writes logs in json format in the log directory
 	 * 
 	 * @param  Logable log
@@ -41,46 +43,42 @@ class Handler extends \CursedScript\Handler
 	{
 		$channel = $log->getChannel();
 		
-		if (isset($this->dir)){
+		if (!isset($this->dir)){
+			return false;
+		} else {
 			$dir = $this->dir;
+		}
 
-			$write = function($channel) use ($log, $dir)
-			{
-				if (is_null($channel)) return false;
+		$write = function($channel) use ($log, $dir)
+		{
+			if (is_null($channel)) return false;
 
-		        $dir  = $dir . $channel;
-		        $file = $dir . '/' . date('d_m_Y') . '.log.json';
+			$file = $dir . $channel . '/' . date('d_m_Y') . '.log.json';
 
-		        if (!file_exists($file)){
-		        	if ((is_dir($dir) or @mkdir($dir)) and @fopen($file, 'x+')){
-		        		$contents = array('[' . PHP_EOL);
-		        	} else {
-		        		if ($channel !== Log::$error_channel && $channel !== Log::$exception_channel){
-		        			throw new \Exception('Invalid log directory', 1);
-		        		}
-
-		        		return false;
-		        	}
-		        } else {
-		        	$contents = file($file);
+        	if (($contents = Explorer::exploreFile($file, true)) !== false){
+        		if (empty($contents)){
+        			$contents = array('[' . PHP_EOL);
+        		} else {
 		        	array_pop($contents);
 		        	$contents[sizeof($contents) - 1] = str_replace(PHP_EOL, ',' . PHP_EOL, $contents[sizeof($contents) - 1]);
-		        }
+        		}
+        	} else {
+        		return false;
+        	}
 
-		        $log_output = ($log instanceof JsonSerializable) ? $log->toJson() : json_encode((array) $log);
+	        $log_output = ($log instanceof Json\Serializable) ? $log->toJson() : str_replace('\u0000*\u0000', '', json_encode((array) $log, JSON_UNESCAPED_UNICODE));
 
-		        $contents[] = "\t" . $log_output . PHP_EOL;
-		        $contents[] = ']';
+	        $contents[] = "\t" . $log_output . PHP_EOL;
+	        $contents[] = ']';
 
-		        @file_put_contents($file, implode($contents));
-			};
+	        @file_put_contents($file, implode($contents));
+		};
 
-	        $write(Log::$main_channel);
+        $write(Log::$main_channel);
 
-	        if (!is_null($channel) && $channel !== Log::$main_channel){
-	        	$write($channel);
-	        }
-		}
+        if ($channel !== Log::$main_channel){
+        	$write($channel);
+        }
 	}
 
 	/**
