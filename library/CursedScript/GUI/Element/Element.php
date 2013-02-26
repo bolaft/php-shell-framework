@@ -12,6 +12,7 @@
 namespace CursedScript\GUI\Element;
 
 use \CursedScript\GUI\Theme\Visual;
+use \CursedScript\GUI\Window;
 
 /**
  * The parent class of all GUI elements
@@ -20,5 +21,31 @@ use \CursedScript\GUI\Theme\Visual;
  */
 abstract class Element extends Visual implements GUI
 {
+	/**
+	 * @var Window
+	 */
+	protected $window;
+
+	/**
+	 * Get window
+	 *
+	 * @return Window
+	 */
+	public function getWindow()
+	{
+	    return $this->window;
+	}
 	
+	/**
+	 * Set window
+	 *
+	 * @param  Window $window
+	 * @return Element
+	 */
+	public function setWindow(Window $window)
+	{
+	    $this->window = $window;
+	
+	    return $this;
+	}
 }

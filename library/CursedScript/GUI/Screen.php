@@ -11,6 +11,8 @@
 
 namespace CursedScript\GUI;
 
+use CursedScript\GUI\Theme\Visual;
+
 /**
  * The full screen container
  *
@@ -19,33 +21,16 @@ namespace CursedScript\GUI;
 class Screen extends Window
 {
 	/**
+	 * @var array
+	 */
+	protected $windows = array();
+
+	/**
 	 * Constructs the screen
 	 */
 	public function __construct()
 	{
 		parent::__construct(0, 0, 0, 0);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function border($left = 0, $right = 0, $top = 0, $bottom = 0, $tl_corner = 0, $tr_corner = 0, $bl_corner = 0, $br_corner = 0)
-	{
-		$this->borders = array($left, $right, $top, $bottom, $tl_corner, $tr_corner, $bl_corner, $br_corner);
-
-		call_user_func_array('ncurses_border', $this->borders);
-
-		return $this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function write($string, $y = 1, $x = 1)
-	{
-		ncurses_mvaddstr($y, $x, $string);
-
-		return $this;
 	}
 
 	/**
@@ -57,10 +42,75 @@ class Screen extends Window
 	{
 		ncurses_refresh();
 
-		foreach ($this->children as $child){
-			ncurses_wrefresh($child->getResource());
+		foreach ($this->windows as $window){
+			ncurses_wrefresh($window->getResource());
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Add a visual to the window
+	 * 
+	 * @param Visual $visual
+	 * @return Screen
+	 */
+	public function add(Visual $visual)
+	{
+		parent::add($visual);
+
+		if ($visual instanceof Window){
+			$this->addWindow($visual);
+			$visual->setScreen($this);
+		}
+	}
+
+	/**
+	 * Get windows
+	 *
+	 * @return array
+	 */
+	public function getWindows()
+	{
+	    return $this->windows;
+	}
+	
+	/**
+	 * Set windows
+	 *
+	 * @param  array $windows
+	 * @return Window
+	 */
+	public function setWindows(array $windows)
+	{
+	    $this->windows = $windows;
+	
+	    return $this;
+	}
+	
+	/**
+	 * Add window
+	 *
+	 * @param  Window $window
+	 * @return Window
+	 */
+	public function addWindow(Window $window)
+	{
+	    $this->windows[] = $window;
+	
+	    return $this;
+	}
+	
+	/**
+	 * Remove window
+	 *
+	 * @param  Window $window
+	 * @return Window
+	 */
+	public function removeWindow(Window $window)
+	{
+	    $this->windows = array_diff($this->windows, array($window));
+	
+	    return $this;
 	}
 }

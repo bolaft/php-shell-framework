@@ -12,6 +12,7 @@
 namespace CursedScript\GUI;
 
 use CursedScript\GUI\Theme\Visual;
+use CursedScript\GUI\Element\Element;
 use CursedScript\Log\Log;
 
 /**
@@ -31,17 +32,62 @@ class Window extends Visual
 	/**
 	 * @var array
 	 */
-	protected $borders;
+	protected $elements = array();
+
+	/**
+	 * @var int
+	 */
+	protected $height;
+
+	/**
+	 * @var int
+	 */
+	protected $width;
+
+	/**
+	 * @var boolean
+	 */
+	protected $border_top = true;
+
+	/**
+	 * @var boolean
+	 */
+	protected $border_bottom = true;
+
+	/**
+	 * @var boolean
+	 */
+	protected $border_left = true;
+
+	/**
+	 * @var boolean
+	 */
+	protected $border_right = true;
+
+	/**
+	 * @var boolean
+	 */
+	protected $border_top_left = true;
+
+	/**
+	 * @var boolean
+	 */
+	protected $border_top_right = true;
+
+	/**
+	 * @var boolean
+	 */
+	protected $border_bottom_left = true;
+
+	/**
+	 * @var boolean
+	 */
+	protected $border_bottom_right = true;
 
 	/**
 	 * @var array
 	 */
-	protected $parent;
-
-	/**
-	 * @var array
-	 */
-	protected $children = array();
+	protected $screen;
 
 	/**
 	 * Constructor
@@ -51,35 +97,52 @@ class Window extends Visual
 	 * @param int $y
 	 * @param int $x
 	 */
-	public function __construct($rows, $cols, $y, $x, $border = true)
+	public function __construct($rows, $cols, $y, $x)
 	{
 		new Log('NEW_WINDOW', func_get_args(), Log::$info_channel);
 
 		$this->resource = ncurses_newwin($rows, $cols, $y, $x);
-
-		if ($border === true) $this->border();
 	}
 
 	/**
-	 * Draws the window's borders
+	 * Draws the window
 	 * 
-	 * @param  int $left
-	 * @param  int $right
-	 * @param  int $top
-	 * @param  int $bottom
-	 * @param  int $tl_corner
-	 * @param  int $tr_corner
-	 * @param  int $bl_corner
-	 * @param  int $br_corner
 	 * @return Window
 	 */
-	public function border($left = 0, $right = 0, $top = 0, $bottom = 0, $tl_corner = 0, $tr_corner = 0, $bl_corner = 0, $br_corner = 0)
+	public function draw()
 	{
-		$this->borders = array($left, $right, $top, $bottom, $tl_corner, $tr_corner, $bl_corner, $br_corner);
+		$borders = array();
 
-		call_user_func_array('ncurses_wborder', array_merge(array($this->resource), $this->borders));
+		$borders[] = $this->border_top          === true ? 0 : 1;
+		$borders[] = $this->border_bottom       === true ? 0 : 1;
+		$borders[] = $this->border_left         === true ? 0 : 1;
+		$borders[] = $this->border_right        === true ? 0 : 1;
+		$borders[] = $this->border_top_left     === true ? 0 : 1;
+		$borders[] = $this->border_top_right    === true ? 0 : 1;
+		$borders[] = $this->border_bottom_left  === true ? 0 : 1;
+		$borders[] = $this->border_bottom_right === true ? 0 : 1;
 
+		if ($this instanceof Screen){
+			call_user_func_array('ncurses_border', $borders);
+		} else {
+			call_user_func_array('ncurses_wborder', array_merge(array($this->resource), $borders));
+		}
+		
 		return $this;
+	}
+
+	/**
+	 * Add a visual to the window
+	 * 
+	 * @param Visual $visual
+	 * @return Window
+	 */
+	public function add(Visual $visual)
+	{
+		if ($visual instanceof Element){
+			$this->addElement($visual);
+			$visual->setWindow($this);
+		}
 	}
 
 	/**
@@ -92,7 +155,11 @@ class Window extends Visual
 	 */
 	public function write($string, $y = 1, $x = 1)
 	{
-		ncurses_mvwaddstr($this->resource, $y, $x, $string);
+		if ($this instanceof Screen){
+			ncurses_mvaddstr($this->resource, $y, $x, $string);
+		} else {
+			ncurses_mvwaddstr($this->resource, $y, $x, $string);
+		}
 
 		return $this;
 	}
@@ -133,74 +200,303 @@ class Window extends Visual
 	}
 
 	/**
-	 * Get parent
+	 * Get screen
 	 *
-	 * @return type
+	 * @return int
 	 */
-	public function getParent()
+	public function getScreen()
 	{
-	    return $this->parent;
+	    return $this->screen;
 	}
 	
 	/**
-	 * Set parent
+	 * Set screen
 	 *
-	 * @param  type $parent
-	 * @return type
+	 * @param  int $screen
+	 * @return int
 	 */
-	public function setParent($parent)
+	public function setScreen(Screen $screen)
 	{
-	    $this->parent = $parent;
+	    $this->screen = $screen;
 	    
 	    return $this;
 	}
 
 	/**
-	 * Get children
+	 * Get elements
 	 *
 	 * @return array
 	 */
-	public function getChildren()
+	public function getElements()
 	{
-	    return $this->children;
+	    return $this->elements;
 	}
 	
 	/**
-	 * Set children
+	 * Set elements
 	 *
-	 * @param  array $children
-	 * @return Window
+	 * @param  array $elements
+	 * @return Element
 	 */
-	public function setChildren(array $children)
+	public function setElements(array $elements)
 	{
-	    $this->children = $children;
+	    $this->elements = $elements;
 	
 	    return $this;
 	}
 	
 	/**
-	 * Add child
+	 * Add element
 	 *
-	 * @param  Window $child
-	 * @return Window
+	 * @param  Element $element
+	 * @return Element
 	 */
-	public function addChild(Window $child)
+	public function addElement(Element $element)
 	{
-	    $this->children[] = $child;
-		$child->setParent($this);
+	    $this->elements[] = $element;
 	
 	    return $this;
 	}
 	
 	/**
-	 * Remove child
+	 * Remove element
 	 *
-	 * @param  Window $child
+	 * @param  Element $element
+	 * @return Element
+	 */
+	public function removeElement(Element $element)
+	{
+	    $this->elements = array_diff($this->elements, array($element));
+	
+	    return $this;
+	}
+
+	/**
+	 * Get height
+	 *
+	 * @return int
+	 */
+	public function getHeight()
+	{
+	    return $this->height;
+	}
+	
+	/**
+	 * Set height
+	 *
+	 * @param  int $height
 	 * @return Window
 	 */
-	public function removeChild(Window $child)
+	public function setHeight($height)
 	{
-	    $this->children = array_diff($this->children, array($child));
+	    $this->height = $height;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get width
+	 *
+	 * @return int
+	 */
+	public function getWidth()
+	{
+	    return $this->width;
+	}
+	
+	/**
+	 * Set width
+	 *
+	 * @param  int $width
+	 * @return Window
+	 */
+	public function setWidth($width)
+	{
+	    $this->width = $width;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get border_top
+	 *
+	 * @return boolean
+	 */
+	public function getBorderTop()
+	{
+	    return $this->border_top;
+	}
+	
+	/**
+	 * Set border_top
+	 *
+	 * @param  boolean $border_top
+	 * @return Window
+	 */
+	public function setBorderTop($border_top)
+	{
+	    $this->border_top = $border_top;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get border_bottom
+	 *
+	 * @return boolean
+	 */
+	public function getBorderBottom()
+	{
+	    return $this->border_bottom;
+	}
+	
+	/**
+	 * Set border_bottom
+	 *
+	 * @param  boolean $border_bottom
+	 * @return Window
+	 */
+	public function setBorderBottom($border_bottom)
+	{
+	    $this->border_bottom = $border_bottom;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get border_left
+	 *
+	 * @return boolean
+	 */
+	public function getBorderLeft()
+	{
+	    return $this->border_left;
+	}
+	
+	/**
+	 * Set border_left
+	 *
+	 * @param  boolean $border_left
+	 * @return Window
+	 */
+	public function setBorderLeft($border_left)
+	{
+	    $this->border_left = $border_left;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get border_right
+	 *
+	 * @return boolean
+	 */
+	public function getBorderRight()
+	{
+	    return $this->border_right;
+	}
+	
+	/**
+	 * Set border_right
+	 *
+	 * @param  boolean $border_right
+	 * @return Window
+	 */
+	public function setBorderRight($border_right)
+	{
+	    $this->border_right = $border_right;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get border_top_left
+	 *
+	 * @return boolean
+	 */
+	public function getBorderTopLeft()
+	{
+	    return $this->border_top_left;
+	}
+	
+	/**
+	 * Set border_top_left
+	 *
+	 * @param  boolean $border_top_left
+	 * @return Window
+	 */
+	public function setBorderTopLeft($border_top_left)
+	{
+	    $this->border_top_left = $border_top_left;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get border_top_right
+	 *
+	 * @return boolean
+	 */
+	public function getBorderTopRight()
+	{
+	    return $this->border_top_right;
+	}
+	
+	/**
+	 * Set border_top_right
+	 *
+	 * @param  boolean $border_top_right
+	 * @return Window
+	 */
+	public function setBorderTopRight($border_top_right)
+	{
+	    $this->border_top_right = $border_top_right;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get border_bottom_left
+	 *
+	 * @return boolean
+	 */
+	public function getBorderBottomLeft()
+	{
+	    return $this->border_bottom_left;
+	}
+	
+	/**
+	 * Set border_bottom_left
+	 *
+	 * @param  boolean $border_bottom_left
+	 * @return Window
+	 */
+	public function setBorderBottomLeft($border_bottom_left)
+	{
+	    $this->border_bottom_left = $border_bottom_left;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get border_bottom_right
+	 *
+	 * @return boolean
+	 */
+	public function getBorderBottomRight()
+	{
+	    return $this->border_bottom_right;
+	}
+	
+	/**
+	 * Set border_bottom_right
+	 *
+	 * @param  boolean $border_bottom_right
+	 * @return Window
+	 */
+	public function setBorderBottomRight($border_bottom_right)
+	{
+	    $this->border_bottom_right = $border_bottom_right;
 	
 	    return $this;
 	}
