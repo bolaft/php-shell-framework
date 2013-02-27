@@ -121,7 +121,6 @@ class Window extends Visual
 	}
 
 	/**
-	 * /**
 	 * Borders the window
 	 * 	
 	 * @param  boolean $top

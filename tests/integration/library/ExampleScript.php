@@ -26,7 +26,7 @@ class ExampleScript extends Script
 	 */
 	public function init()
 	{
-		$this->setIni(__DIR__ . '/settings.ini');
+		$this->setIni(dirname(__DIR__) . '/settings.ini');
 	}
 
 	/**
@@ -44,7 +44,6 @@ class ExampleScript extends Script
 			$window = new Window(6, 60, $y, $x);
 			$window->write('Press "N" to open a new window or "Q" to quit');
 			$window->border();
-			$window->move($y + 4, $x + 4);
 
 			$screen->add($window);
 			$screen->paint();
@@ -52,16 +51,12 @@ class ExampleScript extends Script
 
 		$new($y, $x);
 
-		$key = Keyboard::input();
-
-		while($key !== 'q'){
-			if ($key == 'n'){
-				$y++;
-				$x++;
-				$new($y, $x);
-			}
-
+		do {
 			$key = Keyboard::input();
-		};
+
+			if ($key == 'n'){
+				$new($y++, $x++);
+			}
+		} while($key !== 'q');
 	}
 }

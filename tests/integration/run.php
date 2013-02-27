@@ -10,6 +10,6 @@
  */
 
 include_once './../bootstrap.php';
-include_once './example.php';
+include_once './library/ExampleScript.php';
 
 $script = new ExampleScript();

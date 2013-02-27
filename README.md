@@ -1,1 +1,2 @@
-CursedScript PHP Shell Framework
+CursedScript PHP Cli Framework
+==============================

@@ -71,8 +71,8 @@ class Format
      */
     public static function removeFilename($path)
     {
-        $offset = strrpos($path, '/');
+        $length = strrpos($path, '/');
         
-        return substr($path, 0, $offset);
+        return substr($path, 0, $length);
     }
 }
