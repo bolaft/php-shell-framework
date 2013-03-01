@@ -47,12 +47,12 @@ class Window extends Visual
 	/**
 	 * @var int
 	 */
-	protected $position_y;
+	protected $row;
 
 	/**
 	 * @var int
 	 */
-	protected $position_x;
+	protected $col;
 
 	/**
 	 * @var boolean
@@ -104,20 +104,19 @@ class Window extends Visual
 	 * 
 	 * @param int $width
 	 * @param int $height
-	 * @param int $y
-	 * @param int $x
+	 * @param int $row
+	 * @param int $col
 	 */
-	public function __construct($width, $height, $y, $x)
+	public function __construct($width, $height, $row, $col)
 	{
-		$this->width  = $width;
-		$this->height = $height;
-
-		$this->position_y = $y;
-		$this->position_x = $x;
+		$this->row = $row;
+		$this->col = $col;
 
 		new Log('NEW_WINDOW', func_get_args(), Log::$info_channel);
 
-		$this->resource = ncurses_newwin($width, $height, $y, $x);
+		$this->resource = ncurses_newwin($width, $height, $row, $col);
+
+		ncurses_getmaxyx($this->resource, $this->width, $this->height);
 	}
 
 	/**
@@ -144,32 +143,36 @@ class Window extends Visual
 		if (!is_null($bottom_left))  $this->setBottomLeft($bottom_left);
 		if (!is_null($bottom_right)) $this->setBottomRight($bottom_right);
 
-		if ($this instanceof Screen){
-			call_user_func_array('ncurses_border', $this->getBorders());
-		} else {
-			call_user_func_array('ncurses_wborder', array_merge(array($this->resource), $this->getBorders()));
-		}
+		call_user_func_array('ncurses_wborder', array_merge(array($this->resource), $this->getBorders()));
 		
+		return $this;
+	}
+
+	/**
+	 * Clears the window
+	 * 
+	 * @return Window
+	 */
+	public function clear()
+	{
+		ncurses_wclear($this->resource);
+
 		return $this;
 	}
 
 	/**
 	 * Moves the window
 	 * 
-	 * @param  int $y
-	 * @param  int $x
+	 * @param  int $row
+	 * @param  int $col
 	 * @return Window
 	 */
-	public function move($y = null, $x = null)
+	public function move($row = null, $col = null)
 	{
-		if (!is_null($y)) $this->setPositionY($y);
-		if (!is_null($x)) $this->setPositionX($x);
-
-		if ($this instanceof Screen){
-			call_user_func_array('ncurses_move', array($this->getPositionY(), $this->getPositionX()));
-		} else {
-			call_user_func_array('ncurses_wmove', array_merge(array($this->resource), array($this->getPositionY(), $this->getPositionX())));
-		}
+		if (!is_null($row)) $this->setRow($row);
+		if (!is_null($col)) $this->setCol($col);
+			
+		call_user_func_array('ncurses_wmove', array_merge(array($this->resource), array($this->getRow(), $this->getCol())));
 		
 		return $this;
 	}
@@ -186,34 +189,10 @@ class Window extends Visual
 		if (!is_null($width))  $this->setWidth($width);
 		if (!is_null($height)) $this->setHeight($height);
 
-		if ($this instanceof Screen){
-			throw new \CursedScript\Exception\Exception('Cannot resize a screen object', 1);
-		} else {
-			call_user_func_array('ncurses_wmove', array_merge(array($this->resource), array($this->getPositionY(), $this->getPositionX())));
-		}
+		call_user_func_array('ncurses_wmove', array_merge(array($this->resource), array($this->getRow(), $this->getCol())));
 		
 		return $this;
 	}
-
-	/**
-	 * Writes a string at the given position
-	 * 
-	 * @param  string $string
-	 * @param  int $y
-	 * @param  int $x
-	 * @return Window
-	 */
-	public function write($string, $y = 1, $x = 1)
-	{
-		if ($this instanceof Screen){
-			ncurses_mvaddstr($this->resource, $y, $x, $string);
-		} else {
-			ncurses_mvwaddstr($this->resource, $y, $x, $string);
-		}
-
-		return $this;
-	}
-
 
 	/**
 	 * Add a visual to the window
@@ -233,11 +212,7 @@ class Window extends Visual
 	 */
 	final public function getStyleClass()
 	{
-		if ($this instanceof Screen){
-			return 'screen';
-		} else {
-			return 'window';
-		}
+		return 'window';
 	}
 
 	/**
@@ -403,47 +378,47 @@ class Window extends Visual
 	}
 
 	/**
-	 * Get position_y
+	 * Get row
 	 *
 	 * @return int
 	 */
-	public function getPositionY()
+	public function getRow()
 	{
-	    return $this->position_y;
+	    return $this->row;
 	}
 	
 	/**
-	 * Set position_y
+	 * Set row
 	 *
-	 * @param  int $position_y
+	 * @param  int $row
 	 * @return Window
 	 */
-	public function setPositionY($position_y)
+	public function setRow($row)
 	{
-	    $this->position_y = $position_y;
+	    $this->row = $row;
 	
 	    return $this;
 	}
 
 	/**
-	 * Get position_x
+	 * Get col
 	 *
 	 * @return int
 	 */
-	public function getPositionX()
+	public function getCol()
 	{
-	    return $this->position_x;
+	    return $this->col;
 	}
 	
 	/**
-	 * Set position_x
+	 * Set col
 	 *
-	 * @param  int $position_x
+	 * @param  int $col
 	 * @return Window
 	 */
-	public function setPositionX($position_x)
+	public function setCol($col)
 	{
-	    $this->position_x = $position_x;
+	    $this->col = $col;
 	
 	    return $this;
 	}

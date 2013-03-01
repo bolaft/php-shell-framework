@@ -25,9 +25,9 @@ class Keyboard
 	 * Wait for a key stroke and returns it
 	 *
 	 * @param  mixed $expected
-	 * @return int
+	 * @return string
 	 */
-	public static function input($expected = null, $length = null)
+	public static function char($expected = null)
 	{
 		$input = chr(ncurses_getch());
 
@@ -44,19 +44,27 @@ class Keyboard
 				$input = chr(ncurses_getch());
 			}
 		}
-
-		if (!is_null($length)){
-			if (!is_int($length)){
-				throw new Exception('The "length" parameter must be an integer', 1);
-			}
-
-			while (strlen($input) < $length){
-				$input .= chr(ncurses_getch());
-			}
-		}
 		
 		new Log('KEYBOARD_INPUT', array($input), Log::$input_channel);
 
 		return $input;
+	}
+	/**
+	 * Returns the input string (stops at newline, carriage return or end-of-file)
+	 *
+	 * @return string
+	 */
+	public static function string($break, $length = null)
+	{
+		$input  = chr(ncurses_getch());
+		$string = '';
+
+		while(!in_array($input, $break) 
+			&& (is_null($length) 
+				|| strlen($string) < $length)){
+			$string .= $input = chr(ncurses_getch());
+		}
+
+		return $string;
 	}
 }

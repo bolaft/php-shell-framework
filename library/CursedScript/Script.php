@@ -16,7 +16,7 @@ namespace CursedScript;
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-abstract class Script
+abstract class Script implements GUI\GUI
 {
 	/**
 	 * @var Script
@@ -27,27 +27,32 @@ abstract class Script
 	/**
 	 * @var string
 	 */
-	private $ini;
+	protected $ini;
 
 	/**
-	 * @var resource
+	 * @var boolean
 	 */
-	private $ncurses;
+	protected $initialized;
+
+	/**
+	 * @var Shell\Terminal
+	 */
+	protected $terminal;
 
 	/**
 	 * @var Log\Handler
 	 */
-	private $log_handler;
+	protected $log_handler;
 
 	/**
 	 * @var Error\Handler
 	 */
-	private $error_handler;
+	protected $error_handler;
 
 	/**
 	 * @var Exception\Handler
 	 */
-	private $exception_handler;
+	protected $exception_handler;
 
 	/**
 	 * Get instance
@@ -67,6 +72,7 @@ abstract class Script
 	{
 		self::$instance = $this;
 
+		$this->terminal          = new Shell\Terminal();
 		$this->log_handler       = new Log\Handler();
 		$this->error_handler     = new Error\Handler();
 		$this->exception_handler = new Exception\Handler();
@@ -86,8 +92,10 @@ abstract class Script
 		restore_exception_handler();
 		restore_error_handler();
 
-		ncurses_echo();
-		ncurses_end();
+		if ($this->initialized){
+			ncurses_echo();
+			ncurses_end();
+		}
 	}
 
 	/**
@@ -99,21 +107,18 @@ abstract class Script
 		set_error_handler($this->error_handler->getHandle());
 		set_exception_handler($this->exception_handler->getHandle());
 
-		// INI settings
-		if (!isset($this->ini)) $this->ini = dirname(__DIR__) . '/settings.ini';
+		$config = $this->_configure();
 
-		if (file_exists($this->ini)){
-			$config = parse_ini_file($this->ini, true);
-		}
-
-		if(isset($config['channels'])) Log\Log::setChannels($config['channels']);
-		if(isset($config['logger']['dir'])) $this->log_handler->setDir($config['logger']['dir']);
-
+		// Log
 		new Log\Log('SCRIPT_STARTS', array($config), Log\Log::$info_channel);
 
 		// Ncurses initialization
-		$this->ncurses = ncurses_init();
-		ncurses_noecho();
+		ncurses_init();
+
+		$this->initialized = true;
+
+		// Terminal
+		$this->terminal->apply();
 	}
 
 	/**
@@ -124,6 +129,50 @@ abstract class Script
 		new Log\Log('SCRIPT_STOPPED', array(), Log\Log::$info_channel);
 
 		$this->__destruct();
+	}
+
+	/**
+	 * Script configuration
+	 */
+	final private function _configure()
+	{
+		// INI settings
+		if (!isset($this->ini)) $this->ini = dirname(__DIR__) . '/settings.ini';
+
+		if (file_exists($this->ini)){
+			$config = parse_ini_file($this->ini, true);
+		} else {
+			return;
+		}
+
+		// Log channels config
+		if(isset($config['channels'])) Log\Log::setChannels($config['channels']);
+
+		// Logger config
+		if(isset($config['logger']['dir'])) $this->log_handler->setDir($config['logger']['dir']);
+
+		// Terminal config
+		if(isset($config['terminal']['echo'])) $this->terminal->setEcho($config['terminal']['echo']);
+		if(isset($config['terminal']['raw']))  $this->terminal->setRaw($config['terminal']['raw']);
+
+		return $config;
+	}
+
+	/**
+	 * Paints the screen and its child windows
+	 * 
+	 * @return Script
+	 */
+	public function paint($screen)
+	{
+		ncurses_clear();
+		ncurses_refresh();
+
+		foreach ($screen->getWindows() as $window){
+			ncurses_wrefresh($window->getResource());
+		}
+
+		return $this;
 	}
 
 	/**
@@ -160,24 +209,47 @@ abstract class Script
 	}
 
 	/**
-	 * Get ncurses
+	 * Get initialized
 	 *
-	 * @return resource
+	 * @return boolean
 	 */
-	final public function getNcurses()
+	public function getInitialized()
 	{
-	    return $this->ncurses;
+	    return $this->initialized;
 	}
 	
 	/**
-	 * Set ncurses
+	 * Set initialized
 	 *
-	 * @param  resource $ncurses
+	 * @param  boolean $initialized
 	 * @return Script
 	 */
-	final public function setNcurses($ncurses)
+	public function setInitialized($initialized)
 	{
-	    $this->ncurses = $ncurses;
+	    $this->initialized = $initialized;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get terminal
+	 *
+	 * @return Shell\Terminal
+	 */
+	public function getTerminal()
+	{
+	    return $this->terminal;
+	}
+	
+	/**
+	 * Set terminal
+	 *
+	 * @param  Shell\Terminal $terminal
+	 * @return Shell\Terminal
+	 */
+	public function setTerminal($terminal)
+	{
+	    $this->terminal = $terminal;
 	
 	    return $this;
 	}

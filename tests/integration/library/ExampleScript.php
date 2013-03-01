@@ -10,6 +10,7 @@
  */
 
 use \CursedScript\Script;
+use \CursedScript\Shell\Cursor;
 use \CursedScript\GUI\GUI;
 use \CursedScript\GUI\Screen;
 use \CursedScript\GUI\Window;
@@ -37,26 +38,21 @@ class ExampleScript extends Script
 		$screen = new Screen();
 		$screen->border();
 
-		$y = 1;
-		$x = 1;
+		$window = new Window(6, 60, 2, 2);
+		$window->border();
 
-		$new = function($y, $x) use ($screen){
-			$window = new Window(6, 60, $y, $x);
-			$window->write('Press "N" to open a new window or "Q" to quit');
-			$window->border();
+		$cursor = new Cursor($window);
+		$cursor->write('Press "F1" to quit');
 
-			$screen->add($window);
-			$screen->paint();
-		};
+		$screen->add($window);
 
-		$new($y, $x);
+		$this->paint($screen);
 
-		do {
-			$key = Keyboard::input();
+		$string = Keyboard::string(array(GUI::KEY_F1));
 
-			if ($key == 'n'){
-				$new($y++, $x++);
-			}
-		} while($key !== 'q');
+		$cursor->setRow(1);
+		$cursor->write($string);
+
+		$this->paint($screen);
 	}
 }

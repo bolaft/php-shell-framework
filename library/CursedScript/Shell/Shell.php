@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\GUI\Shell;
+namespace CursedScript\Shell;
 
 /**
  * Represents the user's shell

@@ -31,22 +31,8 @@ class Screen extends Window
 	public function __construct()
 	{
 		parent::__construct(0, 0, 0, 0);
-	}
 
-	/**
-	 * Paints the screen and its child windows
-	 * 
-	 * @return Screen
-	 */
-	public function paint()
-	{
-		ncurses_refresh();
-
-		foreach ($this->windows as $window){
-			ncurses_wrefresh($window->getResource());
-		}
-
-		return $this;
+		$this->resource = STDSCR;
 	}
 
 	/**

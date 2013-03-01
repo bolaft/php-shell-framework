@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace CursedScript\GUI\Shell\Input;
+namespace CursedScript\Shell\Input;
 
 /**
  * Mouse input
