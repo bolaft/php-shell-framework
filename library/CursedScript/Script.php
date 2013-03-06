@@ -165,7 +165,6 @@ abstract class Script implements GUI\GUI
 	 */
 	public function paint($screen)
 	{
-		ncurses_clear();
 		ncurses_refresh();
 
 		foreach ($screen->getWindows() as $window){

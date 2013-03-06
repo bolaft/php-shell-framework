@@ -29,7 +29,7 @@ class Keyboard
 	 */
 	public static function char($expected = null)
 	{
-		$input = chr(ncurses_getch());
+		$input = ncurses_getch();
 
 		if (!is_null($expected)){
 			if (is_string($expected)){
@@ -41,13 +41,13 @@ class Keyboard
 			}
 
 			while(!in_array($input, $expected)){
-				$input = chr(ncurses_getch());
+				$input = ncurses_getch();
 			}
 		}
 		
 		new Log('KEYBOARD_INPUT', array($input), Log::$input_channel);
 
-		return $input;
+		return chr($input);
 	}
 	/**
 	 * Returns the input string (stops at newline, carriage return or end-of-file)
@@ -56,13 +56,14 @@ class Keyboard
 	 */
 	public static function string($break, $length = null)
 	{
-		$input  = chr(ncurses_getch());
+		$input  = ncurses_getch();
 		$string = '';
 
 		while(!in_array($input, $break) 
 			&& (is_null($length) 
 				|| strlen($string) < $length)){
-			$string .= $input = chr(ncurses_getch());
+			$string .= chr($input);
+			$input = ncurses_getch();
 		}
 
 		return $string;
