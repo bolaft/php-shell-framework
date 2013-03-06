@@ -50,15 +50,17 @@ class ExampleScript extends Script
 
 		$this->paint($screen);
 
+		$this->terminal->setEcho(true)->apply();
 		$string = Keyboard::string(array(GUI::KEY_F1));
+		$this->terminal->setEcho(false)->apply();
 
 		$cursor->setRow(2)
 			   ->setCol(1)
-		       ->write('You wrote "' . $string . '", press "F1" again to quit');
+		       ->write('You wrote "' . $string . '", press any key to continue');
 
 		$this->paint($screen);
 
-		$string = Keyboard::string(array(GUI::KEY_F1));
+		Keyboard::input();
 
 		$window2 = new Window(8, 80, 5, 5);
 		$window2->border();
@@ -74,10 +76,10 @@ class ExampleScript extends Script
 
 		$this->paint($screen2);
 
-		$string = Keyboard::string(array(GUI::KEY_F1));
+		Keyboard::input();
 
 		$this->paint($screen);
 
-		$string = Keyboard::string(array(GUI::KEY_F1));
+		Keyboard::input();
 	}
 }

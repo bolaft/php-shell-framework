@@ -27,7 +27,7 @@ class Keyboard
 	 * @param  mixed $expected
 	 * @return string
 	 */
-	public static function char($expected = null)
+	public static function input($expected = null)
 	{
 		$input = ncurses_getch();
 
