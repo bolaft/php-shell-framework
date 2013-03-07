@@ -31,8 +31,6 @@ class Screen extends Window
 	public function __construct()
 	{
 		parent::__construct(0, 0, 0, 0);
-
-		$this->resource = STDSCR;
 	}
 
 	/**
@@ -49,6 +47,38 @@ class Screen extends Window
 			$this->addWindow($visual);
 			$visual->setScreen($this);
 		}
+	}
+
+	/**
+	 * Clears the screen and its children
+	 * 
+	 * @return Screen
+	 */
+	public function clear()
+	{
+		ncurses_clear();
+
+		foreach ($this->windows as $window){
+			ncurses_wclear($window->getResource());
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Paints the screen and its children
+	 * 
+	 * @return Screen
+	 */
+	public function paint()
+	{
+		ncurses_refresh();
+
+		foreach ($this->windows as $window){
+			ncurses_wrefresh($window->getResource());
+		}
+
+		return $this;
 	}
 
 	/**

@@ -54,8 +54,16 @@ class Keyboard
 	 *
 	 * @return string
 	 */
-	public static function string($break, $length = null)
+	public static function string($break = array(), $length = null)
 	{
+		if (is_string($break) || is_integer($break)){
+			$break = array($break);
+		} 
+
+		if (!is_array($break)) {
+			throw new Exception('The accepted argument types for "break" are : array, string and null', 1);
+		}
+
 		$input  = ncurses_getch();
 		$string = '';
 
@@ -66,6 +74,6 @@ class Keyboard
 			$input = ncurses_getch();
 		}
 
-		return $string;
+		return trim($string);
 	}
 }

@@ -159,17 +159,16 @@ abstract class Script implements GUI\GUI
 	}
 
 	/**
-	 * Paints the screen and its child windows
+	 * Set the currently displayed screen
 	 * 
 	 * @return Script
 	 */
-	public function paint($screen)
+	public function display($screen)
 	{
-		ncurses_refresh();
+		if (isset($this->screen)) $this->screen->clear();
 
-		foreach ($screen->getWindows() as $window){
-			ncurses_wrefresh($window->getResource());
-		}
+		$this->screen = $screen;
+		$this->screen->paint();
 
 		return $this;
 	}

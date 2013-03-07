@@ -45,40 +45,36 @@ class ExampleScript extends Script
 		       ->write('Type something then press "F1"');
 
 		$screen = new Screen();
-		$screen->border()
-		       ->add($window);
+		$screen->add($window);
 
-		$this->paint($screen);
+		$this->display($screen);
 
-		$this->terminal->setEcho(true)->apply();
-		$string = Keyboard::string(array(GUI::KEY_F1));
-		$this->terminal->setEcho(false)->apply();
+		$string = Keyboard::string(GUI::KEY_F1);
 
 		$cursor->setRow(2)
 			   ->setCol(1)
 		       ->write('You wrote "' . $string . '", press any key to continue');
 
-		$this->paint($screen);
+		$screen->paint();
 
 		Keyboard::input();
 
-		$window2 = new Window(8, 80, 5, 5);
+		$window2 = new Window(8, 60, 5, 5);
 		$window2->border();
 
 		$cursor2 = new Cursor($window2);
 		$cursor2->setRow(1)
-			   ->setCol(1)
-		       ->write('This is a new window');
+			    ->setCol(1)
+		        ->write('This is a new window. Press any key to quit.');
 
 		$screen2 = new Screen();
-		$screen2->border()
-			   ->add($window2);
+		$screen2->add($window2);
 
-		$this->paint($screen2);
+		$this->display($screen2);
 
 		Keyboard::input();
 
-		$this->paint($screen);
+		$this->display($screen);
 
 		Keyboard::input();
 	}
