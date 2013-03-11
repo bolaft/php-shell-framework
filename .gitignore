@@ -1,5 +1,6 @@
 *~
 tests/units/reports/coverage/*
 tests/integration/var/log/*
+tests/integration/settings.ini
 nbproject
 !.gitkeep
