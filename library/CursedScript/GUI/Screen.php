@@ -47,6 +47,8 @@ class Screen extends Window
 			$this->addWindow($visual);
 			$visual->setScreen($this);
 		}
+
+		return $this;
 	}
 
 	/**

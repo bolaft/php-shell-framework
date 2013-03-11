@@ -36,6 +36,11 @@ class Cursor
 	protected $col;
 
 	/**
+	 * @var array
+	 */
+	protected $attributes = array();
+
+	/**
 	 * Constructor
 	 * 
 	 * @param Window $window
@@ -54,15 +59,13 @@ class Cursor
 	 * @param  int $col
 	 * @return Cursor
 	 */
-	public function move($row, $col)
+	public function move($row = null, $col = null)
 	{
 		$row = is_null($row) ? $this->row : $row;
 		$col = is_null($col) ? $this->col : $col;
 
 		ncurses_wmove($this->window->getResource(), $row, $col);
-
-		$this->row = $row;
-		$this->col = $col;
+		ncurses_getyx($this->window->getResource(), $this->row, $this->col);
 
 		return $this;
 	}
@@ -77,10 +80,20 @@ class Cursor
 	 */
 	public function write($string, $row = null, $col = null)
 	{
+		foreach ($this->attributes as $attribute){
+			ncurses_attron($attribute);
+		}
+
 		$row = is_null($row) ? $this->row : $row;
 		$col = is_null($col) ? $this->col : $col;
 
 		ncurses_mvwaddstr($this->window->getResource(), $row, $col, $string);
+
+		foreach ($this->attributes as $attribute){
+			ncurses_attroff($attribute);
+		}
+
+		ncurses_getyx($this->window->getResource(), $this->row, $this->col);
 
 		return $this;
 	}
@@ -101,7 +114,7 @@ class Cursor
 	 * @param  Window $window
 	 * @return Cursor
 	 */
-	public function setWindow($window)
+	public function setWindow(Window $window)
 	{
 	    $this->window = $window;
 	
@@ -150,6 +163,55 @@ class Cursor
 	public function setCol($col)
 	{
 	    $this->col = $col;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get attributes
+	 *
+	 * @return array
+	 */
+	public function getAttributes()
+	{
+	    return $this->attributes;
+	}
+	
+	/**
+	 * Set attributes
+	 *
+	 * @param  Array $attributes
+	 * @return Cursor
+	 */
+	public function setAttributes($attributes)
+	{
+	    $this->attributes = $attributes;
+	
+	    return $this;
+	}
+	
+	/**
+	 * Add attribute
+	 *
+	 * @param  int $attribute
+	 * @return Cursor
+	 */
+	public function addAttribute($attribute)
+	{
+	    $this->attributes[] = $attribute;
+	
+	    return $this;
+	}
+	
+	/**
+	 * Remove attribute
+	 *
+	 * @param  int $attribute
+	 * @return Cursor
+	 */
+	public function removeAttribute($attribute)
+	{
+	    $this->attributes = array_diff($this->attributes, array($attribute));
 	
 	    return $this;
 	}

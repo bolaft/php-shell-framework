@@ -35,14 +35,11 @@ class ExampleScript extends Script
 	 */
 	public function run()
 	{
-
 		$window = new Window(6, 60, 2, 2);
 		$window->border();
 
 		$cursor = new Cursor($window);
-		$cursor->setRow(1)
-			   ->setCol(1)
-		       ->write('Type something then press "F1"');
+		$cursor->write('Type something then press "F1"');
 
 		$screen = new Screen();
 		$screen->add($window);
@@ -51,9 +48,7 @@ class ExampleScript extends Script
 
 		$string = Keyboard::string(GUI::KEY_F1);
 
-		$cursor->setRow(2)
-			   ->setCol(1)
-		       ->write('You wrote "' . $string . '", press any key to continue');
+		$cursor->write('You wrote "' . $string . '", press any key to continue');
 
 		$screen->paint();
 
@@ -63,10 +58,8 @@ class ExampleScript extends Script
 		$window2->border();
 
 		$cursor2 = new Cursor($window2);
-		$cursor2->setRow(1)
-			    ->setCol(1)
-		        ->write('This is a new window. Press any key to quit.');
-
+		$cursor2->write('This is a new window. Press any key to quit.');
+		
 		$screen2 = new Screen();
 		$screen2->add($window2);
 

@@ -30,6 +30,13 @@ class Window extends Visual
 	protected $resource;
 
 	/**
+	 * The ncurses panel resource
+	 * 
+	 * @var resource
+	 */
+	protected $panel;
+
+	/**
 	 * @var array
 	 */
 	protected $elements = array();
@@ -55,44 +62,44 @@ class Window extends Visual
 	protected $col;
 
 	/**
-	 * @var boolean
+	 * @var mixed
 	 */
-	protected $border_top = true;
+	protected $border_top = 0;
 
 	/**
-	 * @var boolean
+	 * @var mixed
 	 */
-	protected $border_bottom = true;
+	protected $border_bottom = 0;
 
 	/**
-	 * @var boolean
+	 * @var mixed
 	 */
-	protected $border_left = true;
+	protected $border_left = 0;
 
 	/**
-	 * @var boolean
+	 * @var mixed
 	 */
-	protected $border_right = true;
+	protected $border_right = 0;
 
 	/**
-	 * @var boolean
+	 * @var mixed
 	 */
-	protected $border_top_left = true;
+	protected $border_top_left = 0;
 
 	/**
-	 * @var boolean
+	 * @var mixed
 	 */
-	protected $border_top_right = true;
+	protected $border_top_right = 0;
 
 	/**
-	 * @var boolean
+	 * @var mixed
 	 */
-	protected $border_bottom_left = true;
+	protected $border_bottom_left = 0;
 
 	/**
-	 * @var boolean
+	 * @var mixed
 	 */
-	protected $border_bottom_right = true;
+	protected $border_bottom_right = 0;
 
 	/**
 	 * @var array
@@ -115,8 +122,21 @@ class Window extends Visual
 		new Log('NEW_WINDOW', func_get_args(), Log::$info_channel);
 
 		$this->resource = ncurses_newwin($width, $height, $row, $col);
+		$this->panel    = ncurses_new_panel($this->resource);
 
 		ncurses_getmaxyx($this->resource, $this->width, $this->height);
+	}
+
+	/**
+	 * Destructor
+	 */
+	public function __destruct()
+	{
+		// Makes sure the panel resource is unreferenced before its window
+		// (required to prevent a "double-linked list corrupted" error)
+		
+		$this->panel    = null;
+		$this->resource = null;
 	}
 
 	/**
@@ -143,7 +163,11 @@ class Window extends Visual
 		if (!is_null($bottom_left))  $this->setBottomLeft($bottom_left);
 		if (!is_null($bottom_right)) $this->setBottomRight($bottom_right);
 
-		call_user_func_array('ncurses_wborder', array_merge(array($this->resource), $this->getBorders()));
+		if ($this instanceof Screen){
+			call_user_func_array('ncurses_border', $this->getBorders());
+		} else {
+			call_user_func_array('ncurses_wborder', array_merge(array($this->resource), $this->getBorders()));
+		}
 		
 		return $this;
 	}
@@ -206,6 +230,8 @@ class Window extends Visual
 			$this->addElement($visual);
 			$visual->setWindow($this);
 		}
+
+		return $this;
 	}
 	/**
 	 * Get style class for stylization
@@ -224,14 +250,19 @@ class Window extends Visual
 	{
 		$borders = array();
 
-		$borders[] = $this->border_top          === true ? 0 : 1;
-		$borders[] = $this->border_bottom       === true ? 0 : 1;
-		$borders[] = $this->border_left         === true ? 0 : 1;
-		$borders[] = $this->border_right        === true ? 0 : 1;
-		$borders[] = $this->border_top_left     === true ? 0 : 1;
-		$borders[] = $this->border_top_right    === true ? 0 : 1;
-		$borders[] = $this->border_bottom_left  === true ? 0 : 1;
-		$borders[] = $this->border_bottom_right === true ? 0 : 1;
+		$borders[] = $this->border_top;
+		$borders[] = $this->border_bottom;
+		$borders[] = $this->border_left;
+		$borders[] = $this->border_right;
+		$borders[] = $this->border_top_left;
+		$borders[] = $this->border_top_right;
+		$borders[] = $this->border_bottom_left;
+		$borders[] = $this->border_bottom_right;
+
+		// Turns string border values into ASCII
+		array_walk($borders, function(&$value){
+			if (is_string($value)) $value = ord($value);
+		});
 
 		return $borders;
 	}
@@ -255,6 +286,29 @@ class Window extends Visual
 	public function setResource($resource)
 	{
 	    $this->resource = $resource;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get panel
+	 *
+	 * @return resource
+	 */
+	public function getPanel()
+	{
+	    return $this->panel;
+	}
+	
+	/**
+	 * Set panel
+	 *
+	 * @param  resource $panel
+	 * @return Window
+	 */
+	public function setPanel($panel)
+	{
+	    $this->panel = $panel;
 	
 	    return $this;
 	}
@@ -426,7 +480,7 @@ class Window extends Visual
 	/**
 	 * Get border_top
 	 *
-	 * @return boolean
+	 * @return mixed
 	 */
 	public function getBorderTop()
 	{
@@ -436,7 +490,7 @@ class Window extends Visual
 	/**
 	 * Set border_top
 	 *
-	 * @param  boolean $border_top
+	 * @param  mixed $border_top
 	 * @return Window
 	 */
 	public function setBorderTop($border_top)
@@ -449,7 +503,7 @@ class Window extends Visual
 	/**
 	 * Get border_bottom
 	 *
-	 * @return boolean
+	 * @return mixed
 	 */
 	public function getBorderBottom()
 	{
@@ -459,7 +513,7 @@ class Window extends Visual
 	/**
 	 * Set border_bottom
 	 *
-	 * @param  boolean $border_bottom
+	 * @param  mixed $border_bottom
 	 * @return Window
 	 */
 	public function setBorderBottom($border_bottom)
@@ -472,7 +526,7 @@ class Window extends Visual
 	/**
 	 * Get border_left
 	 *
-	 * @return boolean
+	 * @return mixed
 	 */
 	public function getBorderLeft()
 	{
@@ -482,7 +536,7 @@ class Window extends Visual
 	/**
 	 * Set border_left
 	 *
-	 * @param  boolean $border_left
+	 * @param  mixed $border_left
 	 * @return Window
 	 */
 	public function setBorderLeft($border_left)
@@ -495,7 +549,7 @@ class Window extends Visual
 	/**
 	 * Get border_right
 	 *
-	 * @return boolean
+	 * @return mixed
 	 */
 	public function getBorderRight()
 	{
@@ -505,7 +559,7 @@ class Window extends Visual
 	/**
 	 * Set border_right
 	 *
-	 * @param  boolean $border_right
+	 * @param  mixed $border_right
 	 * @return Window
 	 */
 	public function setBorderRight($border_right)
@@ -518,7 +572,7 @@ class Window extends Visual
 	/**
 	 * Get border_top_left
 	 *
-	 * @return boolean
+	 * @return mixed
 	 */
 	public function getBorderTopLeft()
 	{
@@ -528,7 +582,7 @@ class Window extends Visual
 	/**
 	 * Set border_top_left
 	 *
-	 * @param  boolean $border_top_left
+	 * @param  mixed $border_top_left
 	 * @return Window
 	 */
 	public function setBorderTopLeft($border_top_left)
@@ -541,7 +595,7 @@ class Window extends Visual
 	/**
 	 * Get border_top_right
 	 *
-	 * @return boolean
+	 * @return mixed
 	 */
 	public function getBorderTopRight()
 	{
@@ -551,7 +605,7 @@ class Window extends Visual
 	/**
 	 * Set border_top_right
 	 *
-	 * @param  boolean $border_top_right
+	 * @param  mixed $border_top_right
 	 * @return Window
 	 */
 	public function setBorderTopRight($border_top_right)
@@ -564,7 +618,7 @@ class Window extends Visual
 	/**
 	 * Get border_bottom_left
 	 *
-	 * @return boolean
+	 * @return mixed
 	 */
 	public function getBorderBottomLeft()
 	{
@@ -574,7 +628,7 @@ class Window extends Visual
 	/**
 	 * Set border_bottom_left
 	 *
-	 * @param  boolean $border_bottom_left
+	 * @param  mixed $border_bottom_left
 	 * @return Window
 	 */
 	public function setBorderBottomLeft($border_bottom_left)
@@ -587,7 +641,7 @@ class Window extends Visual
 	/**
 	 * Get border_bottom_right
 	 *
-	 * @return boolean
+	 * @return mixed
 	 */
 	public function getBorderBottomRight()
 	{
@@ -597,7 +651,7 @@ class Window extends Visual
 	/**
 	 * Set border_bottom_right
 	 *
-	 * @param  boolean $border_bottom_right
+	 * @param  mixed $border_bottom_right
 	 * @return Window
 	 */
 	public function setBorderBottomRight($border_bottom_right)

@@ -152,8 +152,10 @@ abstract class Script implements GUI\GUI
 		if(isset($config['logger']['dir'])) $this->log_handler->setDir($config['logger']['dir']);
 
 		// Terminal config
-		if(isset($config['terminal']['echo'])) $this->terminal->setEcho($config['terminal']['echo']);
-		if(isset($config['terminal']['raw']))  $this->terminal->setRaw($config['terminal']['raw']);
+		if(isset($config['terminal']['echo']))   $this->terminal->setEcho($config['terminal']['echo']);
+		if(isset($config['terminal']['raw']))    $this->terminal->setRaw($config['terminal']['raw']);
+		if(isset($config['terminal']['cursor'])) $this->terminal->setCursor($config['terminal']['cursor']);
+		if(isset($config['terminal']['keypad'])) $this->terminal->setKeypad($config['terminal']['keypad']);
 
 		return $config;
 	}
@@ -165,7 +167,7 @@ abstract class Script implements GUI\GUI
 	 */
 	public function display($screen)
 	{
-		if (isset($this->screen)) $this->screen->clear();
+		// if (isset($this->screen)) $this->screen->clear();
 
 		$this->screen = $screen;
 		$this->screen->paint();
