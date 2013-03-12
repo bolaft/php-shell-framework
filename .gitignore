@@ -1,4 +1,5 @@
 *~
+*.ini
 tests/units/reports/coverage/*
 tests/integration/var/log/*
 nbproject
