@@ -11,6 +11,8 @@
 
 namespace CursedScript;
 
+use \CursedScript\GUI\Screen;
+
 /**
  * The Script class provides advanced console functionalities to classes who extend it
  *
@@ -38,6 +40,11 @@ abstract class Script implements GUI\GUI
 	 * @var Shell\Terminal
 	 */
 	protected $terminal;
+
+	/**
+	 * @var Screen
+	 */
+	protected $screen;
 
 	/**
 	 * @var Log\Handler
@@ -107,6 +114,7 @@ abstract class Script implements GUI\GUI
 		set_error_handler($this->error_handler->getHandle());
 		set_exception_handler($this->exception_handler->getHandle());
 
+		// Config
 		$config = $this->_configure();
 
 		// Log
@@ -117,7 +125,7 @@ abstract class Script implements GUI\GUI
 
 		$this->initialized = true;
 
-		// Terminal
+		// Apply terminal settings
 		$this->terminal->apply();
 	}
 
@@ -129,6 +137,37 @@ abstract class Script implements GUI\GUI
 		new Log\Log('SCRIPT_STOPPED', array(), Log\Log::$info_channel);
 
 		$this->__destruct();
+	}
+
+	/**
+	 * Refreshes the screen and its windows
+	 * 
+	 * @return Script
+	 */
+	final public function refresh()
+	{
+		new Log\Log('REFRESH', array(), Log\Log::$info_channel);
+
+		ncurses_update_panels();
+		ncurses_doupdate();
+
+		return $this;
+	}
+
+	/**
+	 * Select the displayed screen
+	 * 
+	 * @return Script
+	 */
+	final public function select(Screen $screen)
+	{
+		new Log\Log('SCREEN_SELECTION', array($screen), Log\Log::$info_channel);
+
+		if (isset($this->screen)) $this->screen->hide();
+
+		$screen->show();
+
+		return $this;
 	}
 
 	/**
@@ -156,23 +195,9 @@ abstract class Script implements GUI\GUI
 		if(isset($config['terminal']['raw']))    $this->terminal->setRaw($config['terminal']['raw']);
 		if(isset($config['terminal']['cursor'])) $this->terminal->setCursor($config['terminal']['cursor']);
 		if(isset($config['terminal']['keypad'])) $this->terminal->setKeypad($config['terminal']['keypad']);
+		if(isset($config['terminal']['color']))  $this->terminal->setColor($config['terminal']['color']);
 
 		return $config;
-	}
-
-	/**
-	 * Set the currently displayed screen
-	 * 
-	 * @return Script
-	 */
-	public function display($screen)
-	{
-		// if (isset($this->screen)) $this->screen->clear();
-
-		$this->screen = $screen;
-		$this->screen->paint();
-
-		return $this;
 	}
 
 	/**
@@ -250,6 +275,29 @@ abstract class Script implements GUI\GUI
 	public function setTerminal($terminal)
 	{
 	    $this->terminal = $terminal;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get screen
+	 *
+	 * @return Screen
+	 */
+	public function getScreen()
+	{
+	    return $this->screen;
+	}
+	
+	/**
+	 * Set screen
+	 *
+	 * @param  Screen $screen
+	 * @return Script
+	 */
+	public function setScreen($screen)
+	{
+	    $this->screen = $screen;
 	
 	    return $this;
 	}

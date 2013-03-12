@@ -39,6 +39,11 @@ class Terminal
 	protected $cursor = false;
 
 	/**
+	 * @var boolean
+	 */
+	protected $color = true;
+
+	/**
 	 * Apply terminal settings
 	 *
 	 * @param resource $ncurses
@@ -49,6 +54,8 @@ class Terminal
 		$this->echo   ? ncurses_echo()      : ncurses_noecho();
 		$this->raw    ? ncurses_raw()       : ncurses_cbreak();
 		$this->cursor ? ncurses_curs_set(1) : ncurses_curs_set(0);
+
+		if ($this->color) ncurses_start_color();
 		
 		ncurses_keypad(STDSCR, $this->keypad);
 
@@ -165,6 +172,29 @@ class Terminal
 	public function setCursor($cursor)
 	{
 	    $this->cursor = $cursor;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get color
+	 *
+	 * @return boolean
+	 */
+	public function getColor()
+	{
+	    return $this->color;
+	}
+	
+	/**
+	 * Set color
+	 *
+	 * @param  boolean $color
+	 * @return Terminal
+	 */
+	public function setColor($color)
+	{
+	    $this->color = $color;
 	
 	    return $this;
 	}

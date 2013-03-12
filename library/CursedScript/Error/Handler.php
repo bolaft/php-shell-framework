@@ -26,7 +26,33 @@ class Handler extends \CursedScript\Handler
 	 */
 	public function __construct()
 	{
-		$this->handle = array($this, 'echoHandle');
+		$this->handle = array($this, 'screenHandle');
+	}
+
+	/**
+	 * The default error handler
+	 * Logs the event, display the error in a screen and stops the script
+	 * 
+	 * @param  int $level
+	 * @param  string $message
+	 * @param  string $file
+	 * @param  int $line
+	 * @param  array $context
+	 */
+	public function screenHandle($level, $message, $file = null, $line = null, array $context = null)
+	{
+		new Log('ERROR', func_get_args(), Log::$error_channel);
+
+		$error = new Error($level, $message, $file, $line, $context);
+
+		$screen = new Screen($error);
+		
+		Script::$instance->select($screen)
+		                 ->refresh();
+
+		Keyboard::input();
+		
+		Script::$instance->stop();
 	}
 
 	/**

@@ -20,5 +20,16 @@ use \CursedScript\GUI;
  */
 class Screen extends GUI\Screen implements ScreenInterface
 {
+	/**
+	 * Constructor
+	 *
+	 * @param \Exception $exception
+	 */
+	public function __construct(\Exception $exception)
+	{
+		parent::__construct();
 
+		$cursor = new Cursor($this);
+		$cursor->write($error->getMessage());
+	}
 }

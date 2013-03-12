@@ -12,6 +12,8 @@
 namespace CursedScript\Exception;
 
 use \CursedScript\Log\Log;
+use \CursedScript\Script;
+use \CursedScript\Shell\Input\Keyboard;
 
 /**
  * Handles PHP exceptions
@@ -25,11 +27,31 @@ class Handler extends \CursedScript\Handler
 	 */
 	public function __construct()
 	{
-		$this->handle = array($this, 'echoHandle');
+		$this->handle = array($this, 'screenHandle');
 	}
 
 	/**
 	 * The default exception handler
+	 * Logs the event, display the exception in a screen a stops the script
+	 * 
+	 * @param  \Exception $exception
+	 */
+	public function screenHandle(\Exception $exception)
+	{
+		new Log('EXCEPTION', func_get_args(), Log::$exception_channel);
+
+		$screen = new Screen($exception);
+		
+		Script::$instance->select($screen)
+		                 ->refresh();
+
+		Keyboard::input();
+
+		Script::$instance->stop();
+	}
+
+	/**
+	 * The classic exception handler
 	 * Logs the event, display the exception and stops the script
 	 * 
 	 * @param  \Exception $exception

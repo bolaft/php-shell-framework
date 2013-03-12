@@ -125,6 +125,8 @@ class Window extends Visual
 		$this->panel    = ncurses_new_panel($this->resource);
 
 		ncurses_getmaxyx($this->resource, $this->width, $this->height);
+		
+		$this->hide();
 	}
 
 	/**
@@ -231,8 +233,50 @@ class Window extends Visual
 			$visual->setWindow($this);
 		}
 
+		if ($this instanceof Screen && $visual instanceof Window){
+			$this->addWindow($visual);
+			$visual->setScreen($this);
+		}
+
 		return $this;
 	}
+
+	public function show()
+	{
+		ncurses_show_panel($this->panel);
+
+		if ($this instanceof Screen){
+			foreach ($this->windows as $window){
+				ncurses_show_panel($window->getPanel());
+			}
+		}
+	}
+
+	public function hide()
+	{
+		ncurses_hide_panel($this->panel);
+
+		if ($this instanceof Screen){
+			foreach ($this->windows as $window){
+				ncurses_hide_panel($window->getPanel());
+			}
+		}
+	}
+
+	public function top()
+	{
+		if (!$this instanceof Screen){
+			ncurses_top_panel($this->panel);
+		}
+	}
+
+	public function bottom()
+	{
+		ncurses_bottom_panel($this->panel);
+
+		if (!$this instanceof Screen) ncurses_bottom_panel($this->screen->getPanel());
+	}
+
 	/**
 	 * Get style class for stylization
 	 */

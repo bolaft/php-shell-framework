@@ -31,28 +31,12 @@ class Screen extends Window
 	public function __construct()
 	{
 		parent::__construct(0, 0, 0, 0);
+
+		$this->bottom();
 	}
 
 	/**
-	 * Add a visual to the window
-	 * 
-	 * @param Visual $visual
-	 * @return Screen
-	 */
-	public function add(Visual $visual)
-	{
-		parent::add($visual);
-
-		if ($visual instanceof Window){
-			$this->addWindow($visual);
-			$visual->setScreen($this);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Clears the screen and its children
+	 * Clears the screen and its windows
 	 * 
 	 * @return Screen
 	 */
@@ -61,23 +45,7 @@ class Screen extends Window
 		ncurses_clear();
 
 		foreach ($this->windows as $window){
-			ncurses_wclear($window->getResource());
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Paints the screen and its children
-	 * 
-	 * @return Screen
-	 */
-	public function paint()
-	{
-		ncurses_refresh();
-
-		foreach ($this->windows as $window){
-			ncurses_wrefresh($window->getResource());
+			$window->clear();
 		}
 
 		return $this;
