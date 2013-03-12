@@ -35,7 +35,7 @@ class ExampleScript extends Script
 	 */
 	public function run()
 	{
-		$this->test1();
+		$this->test3();
 	}
 
 	private function test1()
@@ -115,5 +115,25 @@ class ExampleScript extends Script
 		ncurses_doupdate();
 		
 		ncurses_getch();
+	}
+
+	private function test3()
+	{
+		$screen_1 = new Screen();
+
+		$window_1_1 = new Window(16, 60, 2, 5);
+		$window_1_1->border();
+
+		$window_1_2 = new Window(16, 60, 5, 10);
+		$window_1_2->border();
+
+		$screen_1->add($window_1_1)
+		         ->add($window_1_2);
+
+
+		$this->select($screen_1)
+		     ->refresh();
+
+		Keyboard::input();
 	}
 }

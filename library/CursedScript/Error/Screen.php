@@ -12,6 +12,7 @@
 namespace CursedScript\Error;
 
 use \CursedScript\GUI;
+use \CursedScript\Shell\Cursor;
 
 /**
  * The error screen

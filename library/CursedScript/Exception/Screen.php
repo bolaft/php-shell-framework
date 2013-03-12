@@ -12,6 +12,7 @@
 namespace CursedScript\Exception;
 
 use \CursedScript\GUI;
+use \CursedScript\Shell\Cursor;
 
 /**
  * The default exception screen
