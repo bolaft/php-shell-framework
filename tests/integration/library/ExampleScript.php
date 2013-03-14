@@ -124,12 +124,19 @@ class ExampleScript extends Script
 		$window_1_1 = new Window(16, 60, 2, 5);
 		$window_1_1->border();
 
+		$cursor_1_1_1 = new Cursor($window_1_1);
+		$cursor_1_1_1->write('Window 1');
+
 		$window_1_2 = new Window(16, 60, 5, 10);
 		$window_1_2->border();
+
+		$cursor_1_2_1 = new Cursor($window_1_2);
+		$cursor_1_2_1->write('Window 2');
 
 		$screen_1->add($window_1_1)
 		         ->add($window_1_2);
 
+        $window_1_1->top();
 
 		$this->select($screen_1)
 		     ->refresh();

@@ -84,10 +84,34 @@ class Cursor
 			ncurses_attron($attribute);
 		}
 
-		$row = is_null($row) ? $this->row : $row;
-		$col = is_null($col) ? $this->col : $col;
+		$this->move($row, $col);
 
-		ncurses_mvwaddstr($this->window->getResource(), $row, $col, $string);
+		$win = $this->window->getResource();
+
+		if ($this->window->getBordered()){
+			foreach (str_split($string) as $char){
+				ncurses_getyx($win, $y, $x);
+
+				if ($x === 0){
+					$x++;
+				} elseif ($x === ($this->window->getWidth() - 1)){
+					$x = 1; 
+					$y++;
+				}
+
+				if ($y === 0){
+					$y++;
+				} elseif ($y === ($this->window->getHeight() -1)){
+					// TODO : scrollbar
+					break;
+				}
+
+				ncurses_wmove($win, $y, $x);
+				ncurses_waddch($win, ord($char));
+			}
+		} else {
+			ncurses_waddstr($win, $string);
+		}
 
 		foreach ($this->attributes as $attribute){
 			ncurses_attroff($attribute);

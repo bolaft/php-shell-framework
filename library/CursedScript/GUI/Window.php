@@ -62,6 +62,11 @@ class Window extends Visual
 	protected $col;
 
 	/**
+	 * @var boolean
+	 */
+	protected $bordered = false;
+
+	/**
 	 * @var mixed
 	 */
 	protected $border_top = 0;
@@ -124,7 +129,7 @@ class Window extends Visual
 		$this->resource = ncurses_newwin($width, $height, $row, $col);
 		$this->panel    = ncurses_new_panel($this->resource);
 
-		ncurses_getmaxyx($this->resource, $this->width, $this->height);
+		ncurses_getmaxyx($this->resource, $this->height, $this->width);
 		
 		$this->hide();
 	}
@@ -165,6 +170,8 @@ class Window extends Visual
 		if (!is_null($bottom_left))  $this->setBottomLeft($bottom_left);
 		if (!is_null($bottom_right)) $this->setBottomRight($bottom_right);
 
+		$this->bordered = true;
+
 		if ($this instanceof Screen){
 			call_user_func_array('ncurses_border', $this->getBorders());
 		} else {
@@ -183,40 +190,6 @@ class Window extends Visual
 	{
 		ncurses_wclear($this->resource);
 
-		return $this;
-	}
-
-	/**
-	 * Moves the window
-	 * 
-	 * @param  int $row
-	 * @param  int $col
-	 * @return Window
-	 */
-	public function move($row = null, $col = null)
-	{
-		if (!is_null($row)) $this->setRow($row);
-		if (!is_null($col)) $this->setCol($col);
-			
-		call_user_func_array('ncurses_wmove', array_merge(array($this->resource), array($this->getRow(), $this->getCol())));
-		
-		return $this;
-	}
-
-	/**
-	 * Resizes the window
-	 *
-	 * @param int $width
-	 * @param int $height
-	 * @return Window
-	 */
-	public function resize($width = null, $height = null)
-	{
-		if (!is_null($width))  $this->setWidth($width);
-		if (!is_null($height)) $this->setHeight($height);
-
-		call_user_func_array('ncurses_wmove', array_merge(array($this->resource), array($this->getRow(), $this->getCol())));
-		
 		return $this;
 	}
 
@@ -517,6 +490,29 @@ class Window extends Visual
 	public function setCol($col)
 	{
 	    $this->col = $col;
+	
+	    return $this;
+	}
+
+	/**
+	 * Get bordered
+	 *
+	 * @return boolean
+	 */
+	public function getBordered()
+	{
+	    return $this->bordered;
+	}
+	
+	/**
+	 * Set bordered
+	 *
+	 * @param  boolean $bordered
+	 * @return Window
+	 */
+	public function setBordered($bordered)
+	{
+	    $this->bordered = $bordered;
 	
 	    return $this;
 	}
