@@ -30,7 +30,7 @@ class Example extends Script
 	 */
 	public function init()
 	{
-		$this->setIni(ROOT_PATH . 'app/settings.ini');
+		$this->setIni(ROOT_PATH . 'app/settings/settings.ini');
 		$this->log_handler->setDir(ROOT_PATH . 'var/log');
 	}
 
