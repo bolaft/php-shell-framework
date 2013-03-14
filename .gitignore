@@ -1,5 +1,5 @@
 *~
-tests/units/reports/coverage/*
-tests/integration/var/log/*
+app/tests/reports/coverage/*
+var/log/*
 nbproject
 !.gitkeep

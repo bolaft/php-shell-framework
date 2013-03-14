@@ -42,6 +42,11 @@ class Window extends Visual
 	protected $elements = array();
 
 	/**
+	 * @var boolean
+	 */
+	protected $visible = false;
+
+	/**
 	 * @var int
 	 */
 	protected $width;
@@ -209,11 +214,20 @@ class Window extends Visual
 		if ($this instanceof Screen && $visual instanceof Window){
 			$this->addWindow($visual);
 			$visual->setScreen($this);
+
+			if ($this->visible === true){
+				$visual->show();
+			}
 		}
 
 		return $this;
 	}
 
+	/**
+	 * Shows the window
+	 * 
+	 * @return Window
+	 */
 	public function show()
 	{
 		ncurses_show_panel($this->panel);
@@ -223,8 +237,17 @@ class Window extends Visual
 				ncurses_show_panel($window->getPanel());
 			}
 		}
+
+		$this->visible = true;
+
+		return $this;
 	}
 
+	/**
+	 * Hides the window
+	 * 
+	 * @return Window
+	 */
 	public function hide()
 	{
 		ncurses_hide_panel($this->panel);
@@ -234,20 +257,38 @@ class Window extends Visual
 				ncurses_hide_panel($window->getPanel());
 			}
 		}
+
+		$this->visible = false;
+
+		return $this;
 	}
 
+	/**
+	 * Puts the window at the top of the stack
+	 * 
+	 * @return Window
+	 */
 	public function top()
 	{
 		if (!$this instanceof Screen){
 			ncurses_top_panel($this->panel);
 		}
+
+		return $this;
 	}
 
+	/**
+	 * Puts the window at the bottom of the stack
+	 * 
+	 * @return Window
+	 */
 	public function bottom()
 	{
 		ncurses_bottom_panel($this->panel);
 
 		if (!$this instanceof Screen) ncurses_bottom_panel($this->screen->getPanel());
+
+		return $this;
 	}
 
 	/**
@@ -398,6 +439,29 @@ class Window extends Visual
 	public function removeElement(Element $element)
 	{
 	    $this->elements = array_diff($this->elements, array($element));
+	
+	    return $this;
+	}
+
+	/**
+	 * Get visible
+	 *
+	 * @return boolean
+	 */
+	public function getVisible()
+	{
+	    return $this->visible;
+	}
+	
+	/**
+	 * Set visible
+	 *
+	 * @param  boolean $visible
+	 * @return Window
+	 */
+	public function setVisible($visible)
+	{
+	    $this->visible = $visible;
 	
 	    return $this;
 	}

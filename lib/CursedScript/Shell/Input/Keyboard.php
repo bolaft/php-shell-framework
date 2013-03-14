@@ -74,7 +74,7 @@ class Keyboard
 			$input = ncurses_getch();
 		}
 		
-		new Log\Log('KEYBOARD_INPUT', array($input), Log\Log::$input_channel);
+		new Log('KEYBOARD_INPUT', array($input), Log::$input_channel);
 
 		return trim($string);
 	}

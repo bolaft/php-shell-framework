@@ -14,13 +14,13 @@
 
     <testsuites>
         <testsuite name="App">
-            <directory>library</directory>
+            <directory>lib</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory suffix="php">./../../library</directory>
+            <directory suffix="php">./../../lib</directory>
         </whitelist>
     </filter>
 

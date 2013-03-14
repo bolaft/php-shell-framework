@@ -9,25 +9,29 @@
  * file that was distributed with this source code.
  */
 
+include_once '../app/bootstrap.php';
+
 use \CursedScript\Script;
 use \CursedScript\Shell\Cursor;
 use \CursedScript\GUI\GUI;
 use \CursedScript\GUI\Screen;
 use \CursedScript\GUI\Window;
 use \CursedScript\Shell\Input\Keyboard;
+
 /**
- * The ExampleScript class illustrates some of the CursedScript functionalities ; it can be run from the terminal with /application/run.php
+ * The Example class illustrates some of the CursedScript functionalities ; it can be run from the terminal with /application/run.php
  *
  * @author Soufian Salim <soufi@nsal.im>
  */
-class ExampleScript extends Script
+class Example extends Script
 {
 	/**
 	 * {@inheritDoc}
 	 */
 	public function init()
 	{
-		$this->setIni(dirname(__DIR__) . '/settings.ini');
+		$this->setIni(ROOT_PATH . 'app/settings.ini');
+		$this->log_handler->setDir(ROOT_PATH . 'var/log');
 	}
 
 	/**
@@ -35,7 +39,7 @@ class ExampleScript extends Script
 	 */
 	public function run()
 	{
-		$this->test3();
+		$this->test1();
 	}
 
 	private function test1()
@@ -81,66 +85,50 @@ class ExampleScript extends Script
 
 		Keyboard::input();
 	}
-	
+
 	private function test2()
-	{	
-		$windows = array();
-		$panels = array();
-		$lines = 10;
-		$cols = 40;
-		$y = 2;
-		$x = 4;
-
-		/* Create windows for the panels */
-		$windows[0] = ncurses_newwin($lines, $cols, $y, $x);
-		$windows[1] = ncurses_newwin($lines, $cols, $y + 1, $x + 5);
-		$windows[2] = ncurses_newwin($lines, $cols, $y + 2, $x + 10);
-
-		/* 
-		 * Create borders around the windows so that you can see the effect
-		 * of panels
-		 */
-		for($i = 0; $i < 3; ++$i)
-			ncurses_wborder($windows[$i], 0, 0, 0, 0, 0, 0, 0, 0);
-
-		/* Attach a panel to each window */ 	/* Order is bottom up */
-		$panels[0] = ncurses_new_panel($windows[0]); 	/* Push 0, order: stdscr-0 */
-		$panels[1] = ncurses_new_panel($windows[1]); 	/* Push 1, order: stdscr-0-1 */
-		$panels[2] = ncurses_new_panel($windows[2]); 	/* Push 2, order: stdscr-0-1-2 */
-
-		/* Update the stacking order. 2nd panel will be on top */
-		ncurses_update_panels();
-
-		/* Show it on the screen */
-		ncurses_doupdate();
-		
-		ncurses_getch();
-	}
-
-	private function test3()
 	{
 		$screen_1 = new Screen();
 
+		$this->select($screen_1);
+
 		$window_1_1 = new Window(16, 60, 2, 5);
-		$window_1_1->border();
+		$window_1_1->border()->show();
 
 		$cursor_1_1_1 = new Cursor($window_1_1);
-		$cursor_1_1_1->write('Window 1');
+		$cursor_1_1_1->write('Window 1 - 1');
 
 		$window_1_2 = new Window(16, 60, 5, 10);
-		$window_1_2->border();
+		$window_1_2->border()->show();
 
 		$cursor_1_2_1 = new Cursor($window_1_2);
-		$cursor_1_2_1->write('Window 2');
+		$cursor_1_2_1->write('Window 1 - 2');
 
 		$screen_1->add($window_1_1)
 		         ->add($window_1_2);
 
         $window_1_1->top();
 
-		$this->select($screen_1)
-		     ->refresh();
+		$screen_2 = new Screen();
+
+		$window_2_1 = new Window(16, 60, 8, 15);
+		$window_2_1->border();
+
+		$cursor_2_1_1 = new Cursor($window_2_1);
+		$cursor_2_1_1->write('Window 2 - 1');
+
+		$screen_2->add($window_2_1);
+
+        $this->refresh();
 
 		Keyboard::input();
 	}
+
+	private function test3()
+	{
+		
+	}
 }
+
+// Executing the test script
+$script = new Example();
