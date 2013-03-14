@@ -126,7 +126,61 @@ class Example extends Script
 
 	private function test3()
 	{
-		
+		$menu_screen = new Screen();
+
+		$menu_window = new Window($menu_screen);
+
+		$cron_screen = new Screen();
+
+		$cron_selector = new Selector(function(Selector $selector){
+			$manager = new \MyLib\CronManager();
+			$crons = $manager->getCronList();
+			$items = array();
+
+			foreach ($crons as $cron){
+				$item = new Item($cron['id']);
+				$item->setLabel($cron['label']);
+				$items[] = $item;
+			}
+
+			return $items;
+		});
+		$cron_selector->setName('cron_selector');
+
+		$cron_list_window = new Window($cron_screen);
+		$cron_list_window->setName('cron_list_window')
+						 ->width(1/3)
+		                 ->add(array(
+			new Title(),
+			$cron_selector,
+		));
+
+		$cron_view_window = new Window($cron_screen);
+		$cron_view_window->position(Screen::TOP_RIGHT)
+						 ->add(array(
+			new Title(function(Window $window){
+				return $window->getScreen()
+				              ->getWindowByName('cron_list_window')
+				              ->getElementByName('cron_selector')
+				              ->getSelected()
+				              ->getLabel();
+			}),
+			new Table(function (Window $window){
+				$id = $window->getScreen()
+		               ->getWindowByName('cron_list_window')
+		               ->getElementByName('cron_selector')
+		               ->getSelected()
+		               ->getId();
+
+		        $manager = new \MyLib\CronManager();
+				$crons = $manager->getCronList();
+				$cron = $manager->getCronData($id);
+			}),
+		));
+
+	    // Display
+		$this->select($menu_screen)
+		     ->refresh();
 	}
 }
 
