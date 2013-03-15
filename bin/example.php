@@ -126,63 +126,189 @@ class Example extends Script
 
 	private function test3()
 	{
-		$menu_screen = new Screen();
+		// Creates the non-library CronManager
+		$cron_manager = new CronManager();
+		$crons = $cron_manager->getCronList();
 
-		$menu_window = new Window($menu_screen);
+		/*===================================
+		=            CRON SCREEN            =
+		===================================*/
+		
+		// Creates the cron screen
+		$cron_screen = new Screen();		
+		
+		/*==========  CRON LIST PANEL  ==========*/
 
-		$cron_screen = new Screen();
+		// Creates the cron selector; it will populate from the $crons array
+		$cron_selector = new Selector(
+			function(Selector $selector) use ($crons){
+				$items = array();
 
-		$cron_selector = new Selector(function(Selector $selector){
-			$manager = new \MyLib\CronManager();
-			$crons = $manager->getCronList();
-			$items = array();
+				foreach ($crons as $name => $data){
+					$items[] = new Item($data, $name);
+				}
 
-			foreach ($crons as $cron){
-				$item = new Item($cron['id']);
-				$item->setLabel($cron['label']);
-				$items[] = $item;
+				return $items;
 			}
+		);
 
-			return $items;
-		});
-		$cron_selector->setName('cron_selector');
+		// Adds listeners to the script
+		$this->add(array(
+			// The cron selector will switch to the next item on TAB and ARROW DOWN ...
+			new Trigger(array(Keyboard::TAB, Keyboard::ARROW_DOWN), function () use ($cron_selector){
+				$cron_selector->next();
+			}),
+			// ... and to the previous item on ARROW UP
+			new Trigger(Keyboard::ARROW_UP, function () use ($cron_selector){
+				$cron_selector->previous();
+			}),
+		));
 
-		$cron_list_window = new Window($cron_screen);
-		$cron_list_window->setName('cron_list_window')
-						 ->width(1/3)
-		                 ->add(array(
-			new Title(),
+		// Creates the cron list panel
+		$cron_list_panel = new Panel($cron_screen);
+
+		// Adds a title and the cron selector to the cron panel
+		$cron_list_panel->add(array(
+			new Title('Cron List'),
 			$cron_selector,
 		));
 
-		$cron_view_window = new Window($cron_screen);
-		$cron_view_window->position(Screen::TOP_RIGHT)
-						 ->add(array(
-			new Title(function(Window $window){
-				return $window->getScreen()
-				              ->getWindowByName('cron_list_window')
-				              ->getElementByName('cron_selector')
-				              ->getSelected()
-				              ->getLabel();
-			}),
-			new Table(function (Window $window){
-				$id = $window->getScreen()
-		               ->getWindowByName('cron_list_window')
-		               ->getElementByName('cron_selector')
-		               ->getSelected()
-		               ->getId();
+		// Gets the unique id of the selector
+		$selector_id = $cron_selector->getId();
+		
+		/*==========  CRON VIEW PANEL  ==========*/
 
-		        $manager = new \MyLib\CronManager();
-				$crons = $manager->getCronList();
-				$cron = $manager->getCronData($id);
+		// Creates the cron view panel
+		$cron_view_panel = new Panel($cron_screen);
+
+		// Adds a title, a table and two buttons to the cron view panel
+		$cron_view_panel->add(array(
+			// Creates a title; it will change with the selected cron
+			new Title(function(Title $title) use ($selector_id){
+				return GUI::get($selector_id)->getSelected()
+		                                     ->getLabel();
 			}),
+
+			// Creates a table, it will populate from the selected cron array
+			new Table(function (Table $table) use ($selector_id){
+				return GUI::get($selector_id)->getSelected()
+		                                     ->getConcreteObject();
+			}),
+
+			// Creates a button; it will execute the cron 'command' value
+			new Button(function(Button $button) use ($selector_id){
+				$cron = GUI::get($selector_id)->getSelected()
+		                                      ->getConcreteObject();
+		        Script::getInstance()->execute($cron['command']);
+			}, 'Execute'), 
+
+			// Creates a button; it will call the cron manager 'remove' method on the cron
+			new Button(function(Button $button) use ($selector_id, $cron_manager){
+				$cron = GUI::get($selector_id)->getSelected()
+		                                      ->getConcreteObject();
+		        $cron_manager->remove($cron);
+			}, 'Remove'), 
+		));
+		
+		/*-----  End of CRON SCREEN  ------*/
+
+		/*===================================
+		=            MENU SCREEN            =
+		===================================*/
+
+		// Creates the menu screen
+		$menu_screen = new Screen();
+
+		/*==========  MENU PANEL  ==========*/
+
+		// Creates the selector, with a fixed array of items
+		$menu_selector = new Selector(array(
+			new Item($cron_screen, 'Manage Crons'),
 		));
 
-	    // Display
+		// Defines the "onSelect" trigger; it will switch the script's selected screen
+		$menu_selector->onSelect(function(Selector $selector, Item $item){
+			Script::getInstance()->select($item->getConcreteObject());
+		});
+
+		// Creates the menu panel
+		$menu_panel = new Panel($menu_screen);
+
+		// Adds a title and the selector to the panel
+		$menu_panel->add(array(
+			new Title('Menu'),
+			$menu_selector,
+		));
+		
+		/*-----  End of MENU SCREEN  ------*/
+
+		// Selects the menu screen and displays it to the terminal
 		$this->select($menu_screen)
 		     ->refresh();
 	}
 }
 
-// Executing the test script
+// Executes the test script
 $script = new Example();
+
+// Fake cron manager class
+class CronManager
+{
+	public static $crons;
+
+	public function __construct()
+	{
+		self::$crons = array(
+			'update_something' => array(
+				'command' => 'php /bin/todo/update_something.php',
+				'frequency' => array(
+					'day_of_week'  => '',
+					'day_of_month' => '',
+					'minutes'      => '',
+					'hours'        => '',
+					'month'        => '',
+				),
+			),
+			'do_stuff' => array(
+				'command' => 'php /bin/todo/do_stuff.php',
+				'frequency' => array(
+					'day_of_week'  => '',
+					'day_of_month' => '',
+					'minutes'      => '',
+					'hours'        => '',
+					'month'        => '',
+				),
+			),
+			'update_everything' => array(
+				'command' => 'php /bin/todo/update_everything.php',
+				'frequency' => array(
+					'day_of_week'  => '',
+					'day_of_month' => '',
+					'minutes'      => '',
+					'hours'        => '',
+					'month'        => '',
+				),
+			),
+			'reload_data' => array(
+				'command' => 'php /bin/todo/reload_data.php',
+				'frequency' => array(
+					'day_of_week'  => '',
+					'day_of_month' => '',
+					'minutes'      => '',
+					'hours'        => '',
+					'month'        => '',
+				),
+			),
+		);
+	}
+
+	public function remove($cron)
+	{
+		unset(self::$crons[$cron]);
+	}
+
+	public function getCronList()
+	{
+		return self::$crons;
+	}
+}
