@@ -1,0 +1,40 @@
+# camel case upper level keys are elements
+	# strings following element names are tags
+		# tags prefixed with @ are manual tags
+		# tags prefixed with % are automatic tags
+		# tags prefixed with ? are dynamic tags
+# lower case bottom level keys are rules
+	# rules prefixed with . apply only to self
+	# rules prefixed with + apply only to children
+	# rules prefixed by neither . nor + apply to all
+	# rules prefixed by @ apply only to elements with focus
+
+position: [top, left]
+color: [white, blue]
+border: [false, false, false, false, false, false, false, false]
+
+Panel:
+	.border: [0, 0, 0, 0, 0, 0, 0, 0]
+	+position: [center, middle]
+	List:
+		border: [0, 0, 0, 0, 0, 0, 0, 0]
+		Item ?selected:
+			attributes: [reverse]
+	Title:
+		attributes: [bold]
+	Table:
+		color: [white, cyan]
+		.border: [false, 0, 0, 0, false, false, false, false]
+		Cell:
+			border: [0, false, false, false, 0, 0, 0, 0]
+		Cell %head:
+			attributes: [bold]
+Panel @list:
+	.size: [false, 0.3]
+Panel @view:
+	+position: [center, top]
+Button:
+	align: [center, middle
+	attributes: [reverse]
+Button ?focus:
+	attributes: [reverse bold]

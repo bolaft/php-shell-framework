@@ -166,6 +166,7 @@ class Example extends Script
 
 		// Creates the cron list panel
 		$cron_list_panel = new Panel($cron_screen);
+		$cron_list_panel->tag('list');
 
 		// Adds a title and the cron selector to the cron panel
 		$cron_list_panel->add(array(
@@ -180,6 +181,7 @@ class Example extends Script
 
 		// Creates the cron view panel
 		$cron_view_panel = new Panel($cron_screen);
+		$cron_view_panel->tag('view');
 
 		// Adds a title, a table and two buttons to the cron view panel
 		$cron_view_panel->add(array(
@@ -233,6 +235,7 @@ class Example extends Script
 
 		// Creates the menu panel
 		$menu_panel = new Panel($menu_screen);
+		$menu_panel->tag('menu');
 
 		// Adds a title and the selector to the panel
 		$menu_panel->add(array(
